@@ -1,0 +1,407 @@
+---
+title: "PSC4375: Loops & Predicting"
+subtitle: "Week 5: Lecture 9"
+author: "Prof. Weldzius"
+institute: "Villanova University"
+date: "Slides Updated: `r Sys.Date()`"
+output:
+  beamer_presentation:
+    theme: "CambridgeUS"
+    colortheme: "seahorse"
+    fonttheme: "structurebold"
+---
+
+```{css,echo = F}
+.small .remark-code { /*Change made here*/
+  font-size: 85% !important;
+}
+.tiny .remark-code { /*Change made here*/
+  font-size: 50% !important;
+}
+```
+
+```{r,include=F}
+set.seed(123)
+options(width=60)
+knitr::opts_chunk$set(fig.align='center',fig.width=9,fig.height=5,message=F,warning=F)
+def.chunk.hook  <- knitr::knit_hooks$get("chunk")
+knitr::knit_hooks$set(chunk = function(x, options) {
+  x <- def.chunk.hook(x, options)
+  ifelse(options$size != "normalsize", paste0("\n \\", options$size,"\n\n", x, "\n\n \\normalsize"), x)
+})
+```
+
+# 2016 US Presidential Election
+
+  \begin{center}
+  \includegraphics[width=.5\textwidth]{figs/2016election.png}
+  \end{center} \pause 
+  
+  - 2016 election popular vote: \pause
+    - Clinton: 65,853,516 (48.2%)
+    - Trump: 62,984,825 (46.1%) \pause
+  - Why did Trump win? **Electoral college**
+    - Trump: 304, Clinton: 227 \pause
+  - Election determined by 77,744 votes (margins in WI, MI, PA)
+    - 0.056% of the electorate (~136million)
+    
+---
+
+# Predicting US Presidential Elections
+
+ \pause
+ 
+  - **Electoral college system** \pause
+    - Must win an absolute majority of 538 electoral votes \pause
+    - 538 = 435 (House of Representatives) + 100 (Senators) + 3 (DC) \pause
+    - Must win at least 270 votes \pause
+    - nobody wins an absolute majority $\rightsquigarrow$ House vote \pause
+  - Must predict winner of each state \pause
+  
+  \begin{center}
+  \includegraphics[width=.6\textwidth]{figs/2016electcol.png}
+  \end{center}  
+
+---
+
+# Prediction strategy
+
+ \pause
+ 
+  - Predict state-level support for each candidate using polls \pause
+  - Allocate electoral college votes of that state to its predicted winner \pause
+  - Aggregate EC votes across states to determine the predicted winner \pause
+  - Coding strategy: \pause
+  
+    1. For each state, subset to polls within that state \pause
+    2. Further subset the latest polls \pause
+    3. Average the latest polls to estimate support for each candidate \pause
+    4. Allocate the electoral votes to the candidate who has greatest support \pause
+    5. Repeat this for all states and aggregate the electoral votes \pause 
+    
+  - Sounds like a lot of subsets, ugh...
+  
+---
+
+# Multiplication {.t}
+
+ \pause
+ 
+  - Let's create a new variable that multiples each value in a vector by 2: \pause
+    - Easy in R: `values * 2` \pause
+    - Pretend you didn't know this approach
+
+```{r, echo=F}
+require(tidyverse)
+```
+
+---
+
+# Multiplication {.t}
+
+\footnotesize  
+```{r, eval=F}
+values <- c(2,4,6)
+```
+
+
+---
+
+# Multiplication {.t}
+
+\footnotesize  
+```{r, eval=F}
+values <- c(2,4,6)
+
+## number of values
+n <- length(values)
+```
+
+# Multiplication {.t}
+
+\footnotesize  
+```{r, eval=F}
+values <- c(2,4,6)
+
+## number of values
+n <- length(values)
+
+## create container to hold results
+results <- rep(NA, times = n)
+```
+
+# Multiplication {.t}
+
+\footnotesize  
+```{r}
+values <- c(2,4,6)
+
+## number of values
+n <- length(values)
+
+## create container to hold results
+results <- rep(NA, times = n)
+
+## multiply each value by 2
+results[1] <- values[1] * 2
+results[2] <- values[2] * 2
+results[3] <- values[3] * 2
+```
+
+---
+
+# Multiplication {.t}
+
+\footnotesize  
+```{r}
+values <- c(2,4,6)
+
+## number of values
+n <- length(values)
+
+## create container to hold results
+results <- rep(NA, times = n)
+
+## multiply each value by 2
+results[1] <- values[1] * 2
+results[2] <- values[2] * 2
+results[3] <- values[3] * 2
+
+results
+```
+
+
+---
+
+# Loops in R
+
+ \pause
+ 
+  - What if you had more values? Not efficient! \pause
+    - **for loop**: a way to iteratively execute the same code multiple times. \pause
+  - Basic structure: \pause
+
+\small  
+```{r, echo=T, eval=FALSE}
+for (i in X) {
+  expression1
+  expression2
+  ...
+  expression3
+}
+```
+
+ \pause
+ 
+  - Elements of a loop:  \pause
+    - `i`: counter (can use any name)  \pause
+    - `X`: vector containing a set of ordered values the counter takes \pause
+    - `expression`: a set of expressions that will be repeatedly evaluated. \pause
+    - `{ }`: curly braces to define beginning and end of the loop. \pause
+  - Indentation is important for readability of the code.
+  
+---
+
+# Loop example:
+
+\small 
+```{r}
+values <- c(2,4,6)
+n <- length(values)
+results <- rep(NA, times = n)
+
+## begin loop
+for (i in 1:n) {
+  results[i] <- values[i] * 2
+  print(str_c(values[i], " times 2 is equal to ", results[i]))
+}
+```
+
+---
+
+# 2016 polling prediction
+
+  - Election data: `pres.csv`
+
+\footnotesize   
+| Name           | Description |
+|----------------|:------------------------------------------------------------------------------------------|
+| `state_abb`         |      abbreviated name of state |
+| `clinton` | Clinton's vote share (percentage) |
+| `trump` | Trump's vote share (percentage) |
+
+  - Polling data `polls16.csv`
+
+\footnotesize   
+| Name           | Description |
+|----------------|:------------------------------------------------------------------------------------------|
+| `state`         |      abbreviated name of state in which polls was conducted |
+| `middate` | middate of the period when polls was conducted |
+| `daysleft` | number of days between middate and election day  |
+| `pollster` | name of organization conducting poll |
+| `clinton` | predicted support for Clinton (percentage) |
+| `trump` | predicted support for Trump (percentage) |
+
+---
+
+# Some preprocessing
+
+```{r}
+## download; don't forget to setwd()
+pres16 <- read_csv("../data/pres2016.csv")
+polls16 <- read_csv("../data/polls2016.csv")
+
+## calculate Trump's margin of victory
+polls16 <- polls16 %>%
+  mutate(margin = Trump - Clinton)
+pres16 <- pres16 %>%
+  mutate(margin = Trump - Clinton)
+```
+
+---
+
+# What does the data look like?
+
+\footnotesize
+```{r}
+head(polls16)
+```
+
+---
+
+# Poll prediction for each state {.t}
+
+\footnotesize
+```{r}
+## place holder
+poll.pred <- rep(NA, 51)
+
+## get list of unique state names to iterate over
+state_names <- unique(polls16$state)
+
+## add labels to place holder
+names(poll.pred) <- state_names
+```
+---
+
+# Poll prediction for each state {.t}
+
+\footnotesize
+```{r, warning=F, error=F, eval=F}
+for (i in seq_along(state_names)) {
+```
+
+---
+
+# Poll prediction for each state {.t}
+
+\footnotesize
+```{r, warning=F, error=F, eval=F}
+for (i in seq_along(state_names)) {
+  ## subset the ith state
+  state.data <- polls16 %>%
+    filter(state == state_names[i])
+
+```
+
+---
+
+# Poll prediction for each state {.t}
+
+\footnotesize
+```{r, warning=F, error=F, eval=F}
+for (i in seq_along(state_names)) {
+  ## subset the ith state
+  state.data <- polls16 %>%
+    filter(state == state_names[i])
+  
+  ## pull out the closest date (minimum days to election)
+  min_days <- min(state.data$days_to_election)
+```
+
+---
+
+# Poll prediction for each state {.t}
+
+\footnotesize
+```{r, warning=F, error=F, eval=F}
+for (i in seq_along(state_names)) {
+  ## subset the ith state
+  state.data <- polls16 %>%
+    filter(state == state_names[i])
+  
+  ## pull out the closest date (minimum days to election)
+  min_days <- min(state.data$days_to_election)
+  
+  ## subset only the latest polls within the state
+  state.data <- state.data %>%
+    filter(days_to_election == min_days)
+  
+```
+
+---
+
+# Poll prediction for each state {.t}
+
+\footnotesize
+```{r, warning=F, error=F}
+for (i in seq_along(state_names)) {
+  ## subset the ith state
+  state.data <- polls16 %>%
+    filter(state == state_names[i])
+  
+  ## pull out the closest date (minimum days to election)
+  min_days <- min(state.data$days_to_election)
+  
+  ## subset only the latest polls within the state
+  state.data <- state.data %>%
+    filter(days_to_election == min_days)
+  
+  ## compute the mean of the latest polls and store it
+  poll.pred[i] <- mean(state.data$margin)
+}
+head(poll.pred)
+```
+
+---
+
+# Poll prediction for each state (my way)
+
+\footnotesize
+```{r, results='hide'}
+poll.list <- list()
+state_names <- unique(polls16$state)
+
+for (i in seq_along(state_names)) {
+  state.data <- polls16 %>%
+    filter(state == state_names[i]) %>%
+    filter(days_to_election == min(days_to_election)) %>% 
+    mutate(margin_poll = mean(margin)) %>%
+    select(state, margin_poll)
+  poll.list[[i]] <- state.data
+  print(i)
+}
+PollPred <- do.call(rbind,poll.list)
+head(PollPred)
+```
+
+---
+
+# Comparing polls to outcomes
+
+```{r, echo=FALSE, fig.width=4, fig.height=3}
+plot <- full_join(PollPred, pres16, 
+                   by = c("state" = "state_abb"))
+
+plot %>%
+  ggplot(aes(x = margin_poll, y = margin, label=state)) +
+  geom_text() + 
+  geom_abline(intercept = 0, slope = 1, linetype="dashed") +
+  geom_hline(yintercept=0) +
+  geom_vline(xintercept=0) +
+  labs(y = "Actual Election Results",
+       x = "Poll Results") +
+  theme_bw()
+
+```
+

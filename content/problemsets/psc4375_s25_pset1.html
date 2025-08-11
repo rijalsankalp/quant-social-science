@@ -1,0 +1,143 @@
+---
+title: "Problem Set 1"
+subtitle: "Changing Minds on Gay Marriage"
+
+author: "[YOUR NAME]"
+institute: "Villanova University"
+
+date: 2025-01-04
+Due_Date: "2025-01-31 by 11:59PM ET"
+
+type: exams
+
+header-includes:
+  - \usepackage{fancyhdr}
+  - \pagestyle{fancy}
+  - \fancypagestyle{plain}{\pagestyle{fancy}}
+  - \fancyhead[L]{}
+  - \fancyhead[C]{}
+---
+
+
+
+
+
+
+
+
+<p><strong>If you utilized any assistance to complete this problem set (e.g., classmate, tutor, AI), you should cite it here:</strong> Type your answer here.</p>
+<hr />
+<p>In this exercise, we analyze the data from two experiments in which households were canvassed for support on gay marriage. This exercise is based on: LaCour, M. J., and D. P. Green. 2014. “<a href="http://dx.doi.org/10.1126/science.1256151">When Contact Changes Minds: An Experiment on Transmission of Support for Gay Equality.</a>” <em>Science</em>
+346(6215): 1366–69. Note that the original study was later retracted due to allegations of fabricated data; we will revisit this issue in a follow-up exercise (see section 3.10.1). Questions about the data and research procedures suggest that we should be skeptical of drawing any decisive conclusions from these data; we include them as an example only. In this exercise, however, we analyze the original data while ignoring the allegations.</p>
+<p>Canvassers were given a script leading to conversations that averaged about twenty minutes. A distinctive feature of this study is that gay and straight canvassers were randomly assigned to households and canvassers revealed whether they were straight or gay in the course of the conversation. The experiment aims to test the “contact hypothesis,” which contends that out-group hostility (towards gays in this case) diminishes when people from different groups interact with one another.</p>
+<p>The data file is <code>gay.csv</code>, which is a CSV file. The names and descriptions of
+variables are:</p>
+<table style="width:99%;">
+<colgroup>
+<col width="25%" />
+<col width="72%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Name</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><code>study</code></td>
+<td align="left">source of the data (<code>1</code> = study 1, <code>2</code> = study 2)</td>
+</tr>
+<tr class="even">
+<td align="left"><code>treatment</code></td>
+<td align="left">treatment assignment: <code>No contact</code>,
+<code>Same-Sex Marriage Script by Gay Canvasser</code>,
+<code>Same-Sex Marriage Script by Straight Canvasser</code>,
+<code>Recycling Script by Gay Canvasser</code>, and
+<code>Recycling Script by Straight Canvasser</code></td>
+</tr>
+<tr class="odd">
+<td align="left"><code>wave</code></td>
+<td align="left">survey wave (a total of seven waves, note that Study 2 lacks wave 5 and 6)</td>
+</tr>
+<tr class="even">
+<td align="left"><code>ssm</code></td>
+<td align="left">five-point scale on same-sex marriage, higher scores indicate higher support</td>
+</tr>
+</tbody>
+</table>
+<p>Each observation of this data set is a respondent giving a response to a five-point survey item on same-sex marriage. There are two different studies in this data set, involving interviews during 7 different time periods (i.e. 7 waves). In both studies, the first wave consists of the interview before the canvassing treatment occurs.</p>
+<div id="question-1" class="section level2">
+<h2>Question 1</h2>
+<p>Using the baseline interview wave before the treatment is administered, examine whether randomization was properly conducted. In other words, was the baseline support for gay marriage, <code>ssm</code>, roughly the same for the groups of subjects before the first intervention? Base your analysis on the three groups of Study 1: “Same-Sex Marriage Script by Gay Canvasser,” “Same-Sex Marriage Script by Straight Canvasser” and “No Contact.” Briefly comment on the results.(I left you hints in my comments in the R chunk below.)</p>
+</div>
+<div id="answer-1" class="section level2">
+<h2>Answer 1</h2>
+<pre class="r"><code>## Load required packages
+
+## Read in data
+
+## Filter only wave 1, study 1, relevant treatments
+## then group by treatment before calculating the average for ssm</code></pre>
+<p>Write answer here.</p>
+</div>
+<div id="question-2" class="section level2">
+<h2>Question 2</h2>
+<p>The second wave of survey was implemented two months after the canvassing. Using Study 1, estimate the average treatment effects of gay and straight canvassers on support for same-sex marriage, separately. Give a brief interpretation of the results.</p>
+</div>
+<div id="answer-2" class="section level2">
+<h2>Answer 2</h2>
+<pre class="r"><code>## Filter only wave 2, study 1, relevant treatments
+## create a helpful shorter version of variable names
+## then group by treatment, etc. </code></pre>
+<p>Write answer here.</p>
+</div>
+<div id="question-3" class="section level2">
+<h2>Question 3</h2>
+<p>The study contained another treatment that involves contact, but does not involve using the gay marriage script. Specifically, the authors used a script to encourage people to recycle. What is the purpose of this treatment? Using Study 1 and wave 2, compare outcomes from the treatment “Same-Sex Marriage Script by Gay Canvasser” to “Recycling Script by Gay Canvasser.” Repeat the same for straight canvassers, comparing the treatment “Same-Sex Marriage Script by Straight Canvasser” to “Recycling Script by Straight Canvasser.” What do these comparisons reveal? Give a substantive interpretation of the results.</p>
+</div>
+<div id="answer-3" class="section level2">
+<h2>Answer 3</h2>
+<pre class="r"><code>## Filter only wave 2, study 1, relevant treatments
+## create a helpful shorter version of variable names
+## then group by treatment, etc.</code></pre>
+<p>Write answer here.</p>
+</div>
+<div id="question-4" class="section level2">
+<h2>Question 4</h2>
+<p>In Study 1, the authors reinterviewed the respondents 6 different times (in waves 2 to 7) after treatment, at two month intervals. The last interview in wave 7 occurs one year after treatment. Do the effects of the marriage script canvassing last? If so, under what conditions? Answer these questions by separately computing the average effects of straight and gay canvassers with the same-sex marriage script for each of the subsequent waves (relative to the control condition).</p>
+</div>
+<div id="answer-4" class="section level2">
+<h2>Answer 4</h2>
+<pre class="r"><code>## Filter only study 1, waves above 1, relevant treatments
+## create a helpful shorter version of variable names
+## then group by treatment, etc. </code></pre>
+<p>Write answer here.</p>
+</div>
+<div id="question-5" class="section level2">
+<h2>Question 5</h2>
+<p>The researchers conducted a second study to replicate the core results of the first study. In this study, same-sex marriage scripts are only given by gay canvassers. For Study 2, use the treatments “Same-Sex Marriage Script by Gay Canvasser” and “No Contact” to examine whether randomization was appropriately conducted. Use the baseline support from wave 1 for this analysis.</p>
+</div>
+<div id="answer-5" class="section level2">
+<h2>Answer 5</h2>
+<pre class="r"><code>## Study 2, Wave 1 randomization check </code></pre>
+<p>Write answer here.</p>
+</div>
+<div id="question-6" class="section level2">
+<h2>Question 6</h2>
+<p>For Study 2, estimate the treatment effects of gay canvassing using data from wave 2. Are the results consistent with those of Study 1?</p>
+</div>
+<div id="answer-6" class="section level2">
+<h2>Answer 6</h2>
+<pre class="r"><code>## You got this!</code></pre>
+<p>Write answer here.</p>
+</div>
+<div id="question-7" class="section level2">
+<h2>Question 7</h2>
+<p>Using Study 2, estimate the average effect of gay canvassing at each subsequent wave and observe how it changes over time. Note that Study 2 did not have 5th or 6th wave, but the 7th wave occurred one year after treatment as in Study 1. Draw an overall conclusion from both Study 1 and Study 2.</p>
+</div>
+<div id="answer-7" class="section level2">
+<h2>Answer 7</h2>
+<pre class="r"><code>## Last one!</code></pre>
+<p>Write answer here.</p>
+</div>

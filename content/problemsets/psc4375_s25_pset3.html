@@ -1,0 +1,186 @@
+---
+title: "Problem Set 3"
+subtitle: "Election and Conditional Cash Transfer Program in Mexico"
+
+author: "[YOUR NAME]"
+institute: "Villanova University"
+
+date: 2025-03-21
+Due_Date: "2025-03-28 by 11:59PM ET"
+
+type: exams
+
+output:
+  pdf_document: default
+  html_document: default
+header-includes:
+  - \usepackage{fancyhdr}
+  - \pagestyle{fancy}
+  - \fancypagestyle{plain}{\pagestyle{fancy}}
+  - \fancyhead[L]{}
+  - \fancyhead[C]{}
+---
+
+
+
+
+
+
+
+
+<p><strong>Tell me who (or what) you worked with</strong>: Write here.</p>
+<p>In this exercise, we analyze the data from a study that seeks to estimate the electoral impact of <em>Progresa</em>, Mexico’s <em>conditional cash transfer program</em> (CCT program). This exercise is based on the following article:</p>
+<p>Ana de la O. (2013). ‘Do Conditional Cash Transfers Affect Voting Behavior? Evidence from a Randomized Experiment in Mexico.’ <em>American Journal of Political Science</em>, 57:1, pp.1-14. and Kosuke Imai, Gary King, and Carlos Velasco. (2020). ‘Do Nonpartisan Programmatic Policies Have Partisan Electoral Effects? Evidence from Two Large Scale Randomized Experiments.’ <em>Journal of Politics</em>, 82:2, pp. 714-730.</p>
+<p>The original study relied on a randomized evaluation of the CCT program in which eligible villages were randomly assigned to receive the program either 21 (Early <em>Progresa</em>) or 6 months (Late <em>Progresa</em>) before the 2000 Mexican presidential election. The author of the original study hypothesized that the CCT program would mobilize voters, leading to an increase in turnout and support for the incumbent party (PRI in this case). The analysis was based on a sample of precincts that contain at most one participating village in the evaluation.</p>
+<p>The data we analyze are available as the CSV file <code>progresa.csv</code>. The names and descriptions of variables in the data set are:</p>
+<table style="width:99%;">
+<colgroup>
+<col width="25%" />
+<col width="72%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Name</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><code>treatment</code></td>
+<td align="left">Whether an electoral precinct contains a village where
+households received Early <em>Progresa</em></td>
+</tr>
+<tr class="even">
+<td align="left"><code>pri2000s</code></td>
+<td align="left">PRI votes in the 2000 election as a share of precinct
+population above 18</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>pri2000v</code></td>
+<td align="left">Official PRI vote share in the 2000 election</td>
+</tr>
+<tr class="even">
+<td align="left"><code>t2000</code></td>
+<td align="left">Turnout in the 2000 election as a share of precinct
+population above 18</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>t2000r</code></td>
+<td align="left">Official turnout in the 2000 election</td>
+</tr>
+<tr class="even">
+<td align="left"><code>pri1994</code></td>
+<td align="left">Total PRI votes in the 1994 presidential election</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>pan1994</code></td>
+<td align="left">Total PAN votes in the 1994 presidential election</td>
+</tr>
+<tr class="even">
+<td align="left"><code>prd1994</code></td>
+<td align="left">Total PRD votes in the 1994 presidential election</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>pri1994s</code></td>
+<td align="left">Total PRI votes in the 1994 election as a share of
+precinct population above 18</td>
+</tr>
+<tr class="even">
+<td align="left"><code>pan1994s</code></td>
+<td align="left">Total PAN votes in the 1994 election as a share of
+precinct population above 18</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>prd1994s</code></td>
+<td align="left">Total PRD votes in the 1994 election as a share of
+precinct population above 18</td>
+</tr>
+<tr class="even">
+<td align="left"><code>pri1994v</code></td>
+<td align="left">Official PRI vote share in the 1994 election</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>pan1994v</code></td>
+<td align="left">Official PAN vote share in the 1994 election</td>
+</tr>
+<tr class="even">
+<td align="left"><code>prd1994v</code></td>
+<td align="left">Official PRD vote share in the 1994 election</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>t1994</code></td>
+<td align="left">Turnout in the 1994 election as a share of precinct
+population above 18</td>
+</tr>
+<tr class="even">
+<td align="left"><code>t1994r</code></td>
+<td align="left">Official turnout in the 1994 election</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>votos1994</code></td>
+<td align="left">Total votes cast in the 1994 presidential election</td>
+</tr>
+<tr class="even">
+<td align="left"><code>avgpoverty</code></td>
+<td align="left">Precinct Avg of Village Poverty Index</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>pobtot1994</code></td>
+<td align="left">Total Population in the precinct</td>
+</tr>
+<tr class="even">
+<td align="left"><code>villages</code></td>
+<td align="left">Number of villages in the precinct</td>
+</tr>
+</tbody>
+</table>
+<p>Each observation in the data represents a precinct, and for each precinct the file contains information about its treatment status, the outcomes of interest, socioeconomic indicators, and other precinct characteristics.</p>
+<div id="question-1-4-points" class="section level2">
+<h2>Question 1 (4 points)</h2>
+<p>Estimate the impact of the CCT program on turnout and support for the incumbent party (PRI or Partido Revolucionario Institucional) by comparing the average electoral outcomes in the “treated” (Early <em>Progresa</em>) precincts versus the ones observed in “control” (Late <em>Progresa</em>) precincts. Next, estimate these effects by regressing the outcome variable on the treatment variable. Interpret and compare the estimates under these approaches Here, following the original analysis, use the turnout and support rates as shares of the voting eligible population (<code>t2000</code> and <code>pri2000s</code>, respectively). Do the results support the hypothesis? Provide a brief interpretation.</p>
+</div>
+<div id="answer-1" class="section level2">
+<h2>Answer 1</h2>
+<pre class="r"><code># load packages</code></pre>
+<p>Write answer here.</p>
+</div>
+<div id="question-2-4-points" class="section level2">
+<h2>Question 2 (4 points)</h2>
+<p>In the original analysis, the authors fit a linear regression model that includes as predictors a set of pre-treatment covariates as well as the treatment variable. Here we fit a similar model for each outcome that includes the average poverty level in a precinct (<code>avgpoverty</code>), the total precinct population in 1994 (<code>pobtot1994</code>), the total number of voters who turned out in the previous election (<code>votos1994</code>), and the total number of votes cast for each of the three main competing parties in the previous election (<code>pri1994</code> for PRI, <code>pan1994</code> for Partido Acción Nacional or PAN, and <code>prd1994</code> for Partido de la Revolución Democrática or PRD). Use the same outcome variables as in the original analysis that are based on the shares of the voting age population. According to this model, what are the estimated average effects of the program’s availability on turnout and support for the incumbent party? Are these results different from what you obtained in the previous question?</p>
+</div>
+<div id="answer-2" class="section level2">
+<h2>Answer 2</h2>
+<p>Write answer here.</p>
+</div>
+<div id="question-3-4-points" class="section level2">
+<h2>Question 3 (4 points)</h2>
+<p>Next, we consider an alternative model specification. We will use the original outcome variables as in the previous question. However, our model should include the previous election outcome variables measured as shares of the voting age population (as done for the outcome variables <code>t1994</code>, <code>pri1994s</code>, <code>pan1994s</code>, and <code>prd1994s</code>) instead of those measured in counts. In addition, we apply the natural logarithm transformation to the precinct population variable when including it as a predictor. As in the original model, our model includes the average poverty index as an additional predictor. Are the results based on these new model specifications different from what we obtained in the previous question? If the results are different, which model fits the data better?</p>
+</div>
+<div id="answer-3" class="section level2">
+<h2>Answer 3</h2>
+<p>Write answer here.</p>
+</div>
+<div id="question-4-4-points" class="section level2">
+<h2>Question 4 (4 points)</h2>
+<p>We examine the balance of some pre-treatment variables used in the previous analyses. Using boxplots, compare the distributions of the precinct population (on the original scale), average poverty index, previous turnout rate (as a share of the voting age population), and previous PRI support rate (as a share of the voting age population) between the treatment and control groups. Comment on the patterns you observe.</p>
+</div>
+<div id="answer-4" class="section level2">
+<h2>Answer 4</h2>
+<p>Write answer here.</p>
+</div>
+<div id="question-5-4-points" class="section level2">
+<h2>Question 5 (4 points)</h2>
+<p>We next use the official turnout rate <code>t2000r</code> (as a share of the registered voters) as the outcome variable rather than the turnout rate used in the original analysis (as a share of the voting age population). Similarly, we use the official PRI’s vote share <code>pri2000v</code> (as a share of all votes cast) rather than the PRI’s support rate (as a share of the voting age population). Compute the average treatment effect of the CCT program using a linear regression with the average poverty index, the log-transformed precinct population, and the previous official election outcome variables (<code>t1994r</code> for the previous turnout; <code>pri1994v</code>, <code>pan1994v</code>, and <code>prd1994v</code> for the previous PRI, PAN, and PRD vote shares). Briefly interpret the results.</p>
+</div>
+<div id="answer-5" class="section level2">
+<h2>Answer 5</h2>
+<p>Write answer here.</p>
+</div>
+<div id="question-6-4-points" class="section level2">
+<h2>Question 6 (4 points)</h2>
+<p>So far we have focused on estimating the average treatment effects of the CCT program. However, these effects may vary from one precinct to another. One important dimension to consider is poverty. We may hypothesize that since individuals in precincts with higher levels of poverty are more receptive to the cash transfers, they are more likely to turn out in the election and support the incumbent party when receiving the CCT program. Assess this possibility by examining how the average treatment effect of the policy varies by different levels of poverty for precincts. To do so, fit a linear regression with the following predictors: the treatment variable, the log transformed precinct population, the average poverty index and its square, the interaction between the treatment and poverty index, and the interaction between the treatment and squared poverty index. Briefly explain your results. <strong>Extra credit</strong> (4 points): Estimate the average effects on turnout and PRI votes for unique observed values and plot them as a function of the average poverty level. Comment on the resulting plot.</p>
+</div>
+<div id="answer-6" class="section level2">
+<h2>Answer 6</h2>
+<p>Write answer here.</p>
+</div>

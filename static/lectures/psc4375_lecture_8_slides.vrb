@@ -1,0 +1,23 @@
+\frametitle{Correlation in R}
+\phantomsection\label{correlation-in-r}
+\begin{itemize}
+\tightlist
+\item
+  Use the \texttt{cor()} function \pause
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{leaders }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{select}\NormalTok{(politybefore, polityafter) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{cor}\NormalTok{()}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##              politybefore polityafter
+## politybefore    1.0000000   0.8283237
+## polityafter     0.8283237   1.0000000
+\end{verbatim}
+
+-Very highly correlated!

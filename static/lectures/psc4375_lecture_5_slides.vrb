@@ -1,0 +1,35 @@
+\frametitle{Boxplots in R}
+\phantomsection\label{boxplots-in-r-1}
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{vignettes }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{y =}\NormalTok{ age)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_boxplot}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{scale\_y\_continuous}\NormalTok{(}\AttributeTok{breaks =} \FunctionTok{seq}\NormalTok{(}\DecValTok{20}\NormalTok{, }\DecValTok{80}\NormalTok{,}\AttributeTok{by =} \DecValTok{10}\NormalTok{)) }\SpecialCharTok{+}
+  \FunctionTok{xlim}\NormalTok{(}\SpecialCharTok{{-}}\NormalTok{.}\DecValTok{75}\NormalTok{,.}\DecValTok{75}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"Distribution of Age"}\NormalTok{, }\AttributeTok{y =} \StringTok{"Age"}\NormalTok{) }\SpecialCharTok{+}
+  \FunctionTok{theme\_bw}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{theme}\NormalTok{(}\AttributeTok{axis.text.x=}\FunctionTok{element\_blank}\NormalTok{(),}
+        \AttributeTok{axis.ticks.x=}\FunctionTok{element\_blank}\NormalTok{())}
+\end{Highlighting}
+\end{Shaded}
+
+\vspace{-5pt}
+
+\begin{itemize}
+\tightlist
+\item
+  Added options:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \texttt{scale\_y\_continuous}: scale the y axis
+  \item
+    \texttt{xlim}: alter range of x-axis so box is less wide
+  \item
+    \texttt{theme\_bw}: removes grey background
+  \item
+    \texttt{theme}: allows you to adjust other parts of figure
+  \end{itemize}
+\end{itemize}

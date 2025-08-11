@@ -1,0 +1,285 @@
+---
+title: "PSC4375: Visualizing Distributions"
+subtitle: "Week 3: Lecture 5"
+author: "Prof. Weldzius"
+institute: "Villanova University"
+date: "Slides Updated: `r Sys.Date()`"
+output:
+  beamer_presentation:
+    theme: "CambridgeUS"
+    colortheme: "seahorse"
+    fonttheme: "structurebold"
+
+---
+
+```{css,echo = F}
+.small .remark-code { /*Change made here*/
+  font-size: 85% !important;
+}
+.tiny .remark-code { /*Change made here*/
+  font-size: 50% !important;
+}
+```
+
+```{r,include=F}
+set.seed(123)
+options(width=60)
+knitr::opts_chunk$set(fig.align='center',fig.width=9,fig.height=5,message=F,warning=F)
+def.chunk.hook  <- knitr::knit_hooks$get("chunk")
+knitr::knit_hooks$set(chunk = function(x, options) {
+  x <- def.chunk.hook(x, options)
+  ifelse(options$size != "normalsize", paste0("\n \\", options$size,"\n\n", x, "\n\n \\normalsize"), x)
+})
+```
+
+# Studying political efficacy
+
+  - 2002 WHO survey of people in China and Mexico  \pause
+  - Goal: determine feelings of political efficacy \pause
+  - Question: "How much say do you have in getting the government to address issues that interest you?" \pause
+  
+    1. No say at all
+    2. little say
+    3. some say
+    4. a lot of say
+    5. unlimited say
+    
+---
+
+# Data
+
+ - Load the data:
+ 
+```{r}
+library(tidyverse)
+data(vignettes, package = "qss")
+head(vignettes)
+## Also works if you downloaded the data:
+# vignettes <- read.csv("data/vignettes.csv")
+```
+
+---
+
+# Contingency table
+
+  - `count()` shows how many units are in each category of a variable:
+```{r}
+vignettes %>%
+  count(self)
+```
+
+---
+
+# Contingency table (continued)
+
+  - using `group_by` we can convert these counts into proportions of units:
+  
+```{r}
+vignettes %>%
+  group_by(self) %>%
+  count() %>%
+  ungroup() %>%
+  mutate(prop = n / sum(n))
+  
+```
+
+---
+
+# Useful way to visualize this information: **barplot**
+
+```{r,echo=F,fig.width=4, fig.height=3}
+ggplot(data = vignettes,
+       aes(x = as.factor(self))) +
+  geom_bar(aes(y=..prop..,
+               group = 1)) + # add a barplot layer
+  scale_x_discrete(labels = c("None", "A little",
+                  "Some", "A lot", "Unlimited")) +
+  xlab("Self-reported political efficacy") +
+  ylab("Proportion of Respondents") +
+  theme_bw()
+```
+
+---
+
+# Barplots in R
+
+  - The `barplot()` function can help us visualize a categorical variable:
+  
+```{r, echo=T, fig.show='hide'}
+vignettes %>%
+  ggplot(aes(x = as.factor(self),y=..prop..,group = 1)) +
+  geom_bar() + 
+  scale_x_discrete(labels = c("None", "A little",
+                  "Some", "A lot", "Unlimited")) +
+  xlab("Self-reported political efficacy") +
+  ylab("Proportion of Respondents") +
+  theme_bw()
+```
+
+  - Arguments:  
+    - `aes()`: the aestetic mapping of the plot (what you see)  \pause
+    - `scale_x_discrete()`: changes the scale of the axis  \pause
+    - `xlab()`, `ylab()` are axis labels  \pause
+    - `theme_bw()` removes grey background
+    
+---
+
+# Histogram
+
+  - **Histograms** visualize density of a continuous/numeric variable
+  
+```{r,echo=F,fig.width=3.2, fig.height=2.7}
+vignettes %>%
+  ggplot(aes(x = age, y = ..density..)) +
+  geom_histogram(binwidth = 5, # how wide for each bin
+                 boundary = 0, # bin position
+                 alpha=0.75) + # reduces opaqueness
+  scale_x_continuous(breaks = seq(20, 80,by = 10)) +
+  labs(title = "Distribution of Respondent's Age",
+       y = "Density",
+       x = "Age") + 
+  theme_bw()
+```
+
+---
+
+# How to create histograms?
+
+  - How to create a histogram by hand: \pause
+    
+    1. create bins along the variable of interest \pause
+    2. count number of observations in each bin \pause
+    3. **density** = bin height 
+    
+  $$
+  \text{density} = \frac{\text{proportion of observations in bin}}{\text{bin width}}
+  $$
+  \pause 
+  
+  - The areas of the bins $=$ proportion of observations in those bins.  \pause
+    - $\rightsquigarrow$ area of the blocks sum to 1 (100%)  \pause
+    - With equal-width bins, height is proportional to proportion in bin.
+    
+---
+
+# Histograms in R (`geom_histogram()`)
+
+```{r, echo=T, fig.show='hide'}
+vignettes %>%
+  ggplot(aes(x = age,
+             y = ..density..)) +
+  geom_histogram(binwidth = 5, # how wide for each bin
+                 boundary = 0, # bin position
+                 alpha=0.75) + # reduces opaqueness
+  scale_x_continuous(breaks = seq(20, 80,by = 10)) +
+  labs(title = "Distribution of Respondent's Age",
+       y = "Density",
+       x = "Age") + 
+  theme_bw()
+```
+
+  -`labs` sets the titles for the plot (used `xlab` and `ylab` in previous plot)
+  -`scale_x_continuous` sets the scale for the x-axis
+    
+    
+---
+
+# Histograms in R: adding a vertical `median` line
+
+```{r,echo=F,fig.width=4, fig.height=3}
+vignettes %>%
+  ggplot(aes(x = age,
+             y = ..density..)) +
+  geom_histogram(binwidth = 5, # how wide for each bin
+                 boundary = 0, # bin position
+                 alpha=0.75) + # reduces opaqueness
+  geom_vline(xintercept = median(vignettes$age)) + 
+  annotate(geom = "text", x = median(vignettes$age),
+           y=.03, label = "Median", hjust = -0.1) +
+  scale_x_continuous(breaks = seq(20, 80,by = 10)) +
+  labs(title = "Distribution of Respondent's Age",
+       y = "Density",
+       x = "Age") + 
+  theme_bw()
+```
+
+    
+---
+
+# Histograms in R: adding a vertical `median` line
+
+```{r,echo=T, fig.show='hide'}
+vignettes %>%
+  ggplot(aes(x = age,
+             y = ..density..)) +
+  geom_histogram(binwidth = 5, # how wide for each bin
+                 boundary = 0, # bin position
+                 alpha=0.75) + # reduces opaqueness
+  geom_vline(xintercept = median(vignettes$age)) + 
+  annotate(geom = "text", x = median(vignettes$age),
+           y=.03, label = "Median", hjust = -0.1) +
+  scale_x_continuous(breaks = seq(20, 80,by = 10)) +
+  labs(title = "Distribution of Respondent's Age",
+       y = "Density",
+       x = "Age") + 
+  theme_bw()
+```
+
+---
+
+# Boxplot
+
+  - A **boxplot** can characterize the distribution of continuous variables
+
+```{r, echo=F,fig.width=3.5, fig.height=2.7}
+vignettes %>%
+  ggplot(aes(y = age)) +
+  geom_boxplot() + 
+  scale_y_continuous(breaks = seq(20, 80,by = 10)) +
+  xlim(-.75,.75) +
+  labs(title = "Distribution of Age",
+       y = "Age") +
+  theme_bw() +
+  theme(axis.text.x=element_blank(),axis.ticks.x=element_blank())
+```
+
+
+---
+
+# Boxplots in R
+
+  - "Box" represents range between lower and upper quartile
+  - "Whiskers" represents either:
+    - 1.5 $x$ IQR or max/min of the data, whichever is smaller
+    - Points beyond whiskers are outliers 
+  - Use `geom_boxplot()` in `ggplot`
+
+---
+
+# Boxplots in R
+
+```{r, echo=T, fig.show='hide', fig.width=4, fig.height=3}
+vignettes %>%
+  ggplot(aes(y = age)) + 
+  geom_boxplot() +
+  scale_y_continuous(breaks = seq(20, 80,by = 10)) + 
+  xlim(-.75,.75) + 
+  labs(title = "Distribution of Age", y = "Age") +
+  theme_bw() + 
+  theme(axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())
+```
+\vspace{-5pt}
+
+  - Added options:
+    - `scale_y_continuous`: scale the y axis
+    - `xlim`: alter range of x-axis so box is less wide
+    - `theme_bw`: removes grey background
+    - `theme`: allows you to adjust other parts of figure
+
+---
+
+# Review
+
+  - Visualizing single discrete/categorical variables: **barplots** \pause
+  - Visualizing continuous variables: **histograms, boxplots**

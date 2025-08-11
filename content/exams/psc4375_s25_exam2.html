@@ -1,0 +1,105 @@
+---
+title: "Exam 2"
+suntitle: "Windpower and NIMBYism"
+
+author: "[Your Name]"
+institute: "Villanova University"
+
+date: 2025-05-02
+Due_Date: "2025-05-09 by 11:59PM ET"
+
+type: exams
+
+header-includes:
+  - \usepackage{fancyhdr}
+  - \pagestyle{fancy}
+  - \fancypagestyle{plain}{\pagestyle{fancy}}
+  - \fancyhead[L]{}
+  - \fancyhead[C]{}  
+---
+
+
+
+
+
+
+
+
+<p>You are not allowed to confer with your classmates or any other person on this exam. The exam is open note, open book, open internet. Include any sources you used to complete this exam (e.g., ChatGPT) here:</p>
+<p>This second exam is based on the following article:</p>
+<p>Stokes, Leah C. (2016). <a href="https://doi.org/10.1111/ajps.12220">“Electoral Backlash against Climate Policy: A Natural Experiment on Retrospective Voting and Local Resistance to Public Policy Authors”</a> <em>American Journal of Political Science</em>, Vol. 60, No. 4, pp. 958-974.</p>
+<p>The paper explores the period from 2003 to 2011 in Ontario, Canada. During that time the Liberal Party government passed the Green Energy Act. This policy allowed groups (corporations, communities, and even individuals) to build wind turbines and other renewable energy projects throughout the province. Further, the government agreed to sign long-term contracts to buy the energy produced by these projects.</p>
+<p>Although opinion polls suggest that there was broad support for green energy projects, many voters appeared angry about having a windfarm near them. That is, many people wanted windfarms, but just not near them. This is sometimes called NIMBYism (Not In My BackYard). Stokes’s paper investigated whether people near windfarms were more likely to vote against the Liberal Party, which put in place a policy that promoted windfarms.</p>
+<p>Here’s a partial codebook for the variables in <code>stokes_electoral_2015.csv</code>:</p>
+<table>
+<colgroup>
+<col width="20%" />
+<col width="80%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Name</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><code>master_id</code></td>
+<td align="left">Precinct ID number</td>
+</tr>
+<tr class="even">
+<td align="left"><code>year</code></td>
+<td align="left">Election year</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>prop</code></td>
+<td align="left">Binary variable indicating whether there was a proposed turbine in that precinct in that year</td>
+</tr>
+<tr class="even">
+<td align="left"><code>perc_lib</code></td>
+<td align="left">Votes cast for Liberal Party divided by the number of voters who cast ballots in precinct</td>
+</tr>
+</tbody>
+</table>
+<p>Because windfarms were only created in rural parts of Ontario, we are going to restrict the analysis to rural areas; see paper for definition (if interested). Further, we are only going to analyze a random sample of 500 rural precincts for computational reasons.</p>
+<p>Finally, the author assumes that the location of the windfarms was as-if random. In other words, just like people in a clinical trial are randomly assigned to receive treatment or control, in this case it was as if the windfarms were assigned to precincts without regard to the political attitudes of residents. Under this assumption that windfarm location was unrelated to political preferences, we can give this regression a causal interpretation.</p>
+<div id="question-1-3-points" class="section level2">
+<h2>Question 1 (3 points)</h2>
+<p>First, let’s load the data. What years are included? How many precincts are included? How many year-precincts are included?</p>
+</div>
+<div id="answer-1" class="section level2">
+<h2>Answer 1</h2>
+<p>Write answer here.</p>
+</div>
+<div id="question-2-4-points" class="section level2">
+<h2>Question 2 (4 points)</h2>
+<p>Make a boxplot that shows the distribution of vote share for the Liberal Party in each year. What do you conclude from this plot?</p>
+</div>
+<div id="answer-2" class="section level2">
+<h2>Answer 2</h2>
+<p>Write answer here.</p>
+</div>
+<div id="question-3-4-points" class="section level2">
+<h2>Question 3 (4 points)</h2>
+<p>Make a timeseries plot that shows the total number of precincts with proposed wind farms in each year. +1 Extra credit: remove the plot legend, but be sure to properly name your y-axis. What does the plot show?</p>
+</div>
+<div id="answer-3" class="section level2">
+<h2>Answer 3</h2>
+<p>Write answer here.</p>
+</div>
+<div id="question-4-5-points" class="section level2">
+<h2>Question 4 (5 points)</h2>
+<p>Now we are going to explore whether districts that had proposed windfarms decreased their support for the Liberal Party. Run a regression where the outcome is the percentage of votes for the Liberal Party and the predictors are whether a wind farm was proposed. Your model should also include fixed effects for each precincts and each year (that is, a dummy variable indicating each precinct and another dummy variable for each year). What is the estimated coefficient on the variable <code>prop</code>? What do you conclude?</p>
+</div>
+<div id="answer-4" class="section level2">
+<h2>Answer 4</h2>
+<p>Write answer here.</p>
+</div>
+<div id="question-5" class="section level2">
+<h2>Question 5</h2>
+<p>What is the standard error of the coefficient for <code>prop</code>? What is the value of the estimate divided by the standard error and what does that mean? If you have the null hypothesis that this coefficient is equal to 0 and choose <span class="math inline">\(\alpha = 0.05\)</span> level, would you reject the null hypothesis? What does rejecting the null hypothesis mean substantively in this case?</p>
+</div>
+<div id="answer-5" class="section level2">
+<h2>Answer 5</h2>
+<p>Write answer here.</p>
+</div>

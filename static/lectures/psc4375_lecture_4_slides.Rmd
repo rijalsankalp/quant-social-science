@@ -1,0 +1,181 @@
+---
+title: "PSC4375: Descriptive Statistics"
+subtitle: "Week 2: Lecture 4"
+author: "Prof. Weldzius"
+institute: "Villanova University"
+date: "Slides Updated: `r Sys.Date()`"
+output:
+  beamer_presentation:
+    theme: "CambridgeUS"
+    colortheme: "seahorse"
+    fonttheme: "structurebold"
+---
+
+```{css,echo = F}
+.small .remark-code { /*Change made here*/
+  font-size: 85% !important;
+}
+.tiny .remark-code { /*Change made here*/
+  font-size: 50% !important;
+}
+```
+
+```{r,include=F}
+set.seed(123)
+options(width=60)
+knitr::opts_chunk$set(fig.align='center',fig.width=9,fig.height=5,message=F,warning=F)
+def.chunk.hook  <- knitr::knit_hooks$get("chunk")
+knitr::knit_hooks$set(chunk = function(x, options) {
+  x <- def.chunk.hook(x, options)
+  ifelse(options$size != "normalsize", paste0("\n \\", options$size,"\n\n", x, "\n\n \\normalsize"), x)
+})
+```
+
+# Lots of data
+
+  * Data from study of the effect of minimum wage
+  
+```{r, echo=T, results='hide'}
+library(tidyverse)
+data(minwage, package = "qss")
+head(minwage)
+```
+  
+---
+
+# Lots of data
+
+  * Data from study of the effect of minimum wage
+  
+```{r, echo=F}
+library(tidyverse)
+data(minwage, package = "qss")
+head(minwage)
+```
+  
+---
+
+# Lots and lots of data
+
+  
+```{r}
+head(minwage$wageAfter, n = 200)
+```
+
+---
+
+# How to summarize data
+
+  * How should we summarize the wages data? Many possibilities! \pause
+    - Up to now: focus on **averages** or means of variables \pause
+    
+  * Two salient features of a variable that we want to know: \pause
+    - **Central tendency**: where is the middle/typical/average value \pause
+    - **Spread** around the center: are all values to the center or spread out?
+    
+---
+
+# Center of the data
+
+  * "Center" of the data: typical/average value \pause
+  * **Mean**: sum of the values divided by the number of observations \pause
+  
+  $$
+  \bar{x} = \frac{1}{n} \sum_{i=1}^{n}{x_i}
+  $$
+  \pause 
+  
+  * **Median**: \pause
+  
+  $$
+  \text{median} = 
+   \begin{cases}
+      \text{middle value} & \text{if number of entries is odd} \\
+      \frac{\text{sum of two middle values}}{2} & \text{if number of entries is even}
+    \end{cases}  
+  $$
+  \pause 
+  
+  * In **R**: `mean()` and `median()` 
+  
+---
+
+# Mean vs median
+
+  * Median more robust to **outliers**: \pause
+    - Example 1: data = ${0,1,2,3,5}$. Mean? Median?
+    \vspace{10pt} \pause
+    - Example 2: data = ${0,1,2,3,100}$. Mean? Median?
+    \vspace{10pt} \pause
+  * What does Mark Zuckerberg do to the mean vs. median income?  
+  
+---
+
+# Spread of the data
+
+  * Are the values of the variable close to the center? \pause
+  * **Range**: $[\text{min}(X), \text{max}(X)]$ \pause
+  * **Quantile** (quartile, percentile, etc.): divide data into equal sized groups. \pause
+    - 25th percentile: lower quartile (25% of the data below this value) \pause
+    - 50th percentile: median (50% of the data below this value) \pause
+    - 75th percentile: upper quartile (75% of the data below this value) \pause
+  * **Interquartile range** (IQR): a measure of variability \pause
+    - How spread out is the middle half of the data? \pause
+    - Is most of the data really close to the median or are the values spread out? \pause
+  * **R** function: `range()`, `summary()`, `IQR()`
+  
+---
+
+# Standard deviation
+
+  * **Standard deviation**: On average, how far away are data points from the mean? \pause
+  
+  $$
+  \text{standard deviation} = \sqrt{\frac{1}{n-1}\sum_{i=1}^{n}{\left( x_i - \bar{x} \right)^2}}
+  $$
+  \pause 
+  
+  * Steps:  \pause
+  
+    1. Subtract each data point by the mean \pause
+    2. Square each resulting difference \pause
+    3. Take the sum of these values \pause
+    4. Divide by $n-1$ (or $n$, doesn't matter much) \pause
+    5. Take the square root \pause
+    
+  * **Variance**: standard deviation$^2$ \pause
+  * Why not just take the average deviations from mean without squaring? 
+  
+---
+
+# How large is large?
+
+  * Is a wage of 5.30 an hour large? \pause
+  * Better question: is 5.30 large relative to the distribution of the data? \pause
+    - Big in one dataset might be small in another! \pause
+    - Different units, difference spreads of the data, etc. \pause
+  * Need a way to put any variable on **common units** \pause
+  * **z-score**:  \pause
+  
+  $$
+  \text{z-score of }x_i = \frac{x_i - \text{mean of }x}{\text{standard deviation of }x} 
+  $$
+  \pause 
+  
+  * Interpretation: \pause
+    - Positive values above the mean, negative values below the mean \pause
+    - Units now on the scale of **standard deviations away from the mean** \pause
+    - Intuition: data more than 3 SDs away from mean are rare
+
+---
+
+# z-score example
+
+  * Jane works at The Grog where there's a tip jar. \pause
+  * She's been keeping track of her daily tips: \pause
+    - Average tip of $1.56 with a standard deviation of 20 cents.  \pause
+  * Yesterday, Jane got a $1.86 tip. How big is this?
+  \vspace{10pt} \pause
+  * Today she got $0.56, what about that? 
+  
+    

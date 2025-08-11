@@ -1,0 +1,222 @@
+---
+title: "PSC4375: Measurement and Survey Sampling"
+subtitle: "Week 4: Lecture 7"
+author: "Prof. Weldzius"
+institute: "Villanova University"
+date: "Slides Updated: `r Sys.Date()`"
+output:
+  beamer_presentation:
+    theme: "CambridgeUS"
+    colortheme: "seahorse"
+    fonttheme: "structurebold"
+---
+
+```{css,echo = F}
+.small .remark-code { /*Change made here*/
+  font-size: 85% !important;
+}
+.tiny .remark-code { /*Change made here*/
+  font-size: 50% !important;
+}
+```
+
+```{r,include=F}
+set.seed(123)
+options(width=60)
+knitr::opts_chunk$set(fig.align='center',fig.width=9,fig.height=5,message=F,warning=F)
+def.chunk.hook  <- knitr::knit_hooks$get("chunk")
+knitr::knit_hooks$set(chunk = function(x, options) {
+  x <- def.chunk.hook(x, options)
+  ifelse(options$size != "normalsize", paste0("\n \\", options$size,"\n\n", x, "\n\n \\normalsize"), x)
+})
+```
+
+# Group small talk
+
+  - Introduce yourselves (again)
+  - What did you do for the Super Bowl?
+    - If you watched it: favorite moment?
+    - If you didn't watch it: what did you do instead?
+
+---    
+
+# Concepts and measurement
+ \pause
+ 
+  - Social science is about understanding **causal relationships** \pause 
+    - Does minimum wage change levels of employment \pause
+    - Does outgroup contact influence views on immigration? \pause
+  
+  - Relationships are between **concepts**: \pause
+    - Minimum wage, unemployment, outgroup contact, views on immigration \pause
+    - We took these for granted when talking about causality \pause
+    
+  - Important to consider how we **measure** these concepts \pause
+    - Some straightforward: what is your age? \pause
+    - Others more complicated: what does it mean to "be liberal"? \pause
+    - **Operational definition**: mapping of concept to numbers in our data
+    
+---
+
+# Example
+ \pause
+ 
+  - Concept: presidential approval  \pause
+  - Conceptual definition:  \pause
+    - Extent to which US adults support the actions and policies of the current US president \pause
+    
+  - Operational definition: \pause
+    - "On a scale from 1 to 5, where 1 is least supportive and 5 is most supportive, how much would you say you support the job that Donald Trump is doing as president?"
+    
+---
+
+# Measurement error
+ \pause
+ 
+  - **Measurement error**: chance variation in our measurements \pause
+    - individual measurement = exact value + chance error \pause
+    - chance errors tend to cancel out when we take averages \pause
+    
+  - No matter how careful we are, chance error can always affect a measurement. \pause
+    - Panel study of 19,000 respondents: 20 reported being a citizen in 2010 and then a non-citizen in 2012 \pause
+    - Data entry errors \pause
+    
+  - **Bias**: systematic errors for all units in the same direction. \pause
+    - individual measurement = exact value + bias + chance error \pause
+    - "What did you eat yesterday?" $\rightsquigarrow$ underreporting
+    
+---
+
+# A biased poll?
+
+\begin{center}
+\includegraphics[width=.5\textwidth]{figs/poll_biased.png}
+\end{center}  
+
+---
+
+# 1936 Literary Digest Poll
+
+\begin{center}
+\includegraphics[width=.45\textwidth]{figs/litdig_poll.png}
+\end{center}  
+
+ \pause
+ 
+  - Literary Digest predicted elections using mail-in polls \pause
+  - Source of addresses: automobile registrations, phone books, etc. \pause
+  - In 1936, sent out 10 million ballots, over 2.3 million returned \pause
+  - George Gallup used only 50,000 respondents \pause
+  
+  \begin{center}
+  \begin{tabular}{l | r}
+  & FDR's vote share \\ \hline
+  Literary Digest & 43 \\
+  George Gallup & 56 \\ \hline
+  \end{tabular}
+  \end{center}
+  
+---
+
+# Poll fail
+
+\begin{columns}
+  \begin{column}{0.5\textwidth}
+    \includegraphics[width=.9\textwidth]{figs/litdig_mistake.png}
+  \end{column} 
+  \begin{column}{0.5\textwidth}
+      \begin{tabular}{l r}
+      & FDR \% \\ \hline
+      Literary Digest & 43 \\
+      George Gallup & 56 \\ \hline
+      Actual Outcome & 62 \\ 
+    \end{tabular} 
+  \end{column}
+\end{columns}
+ \pause
+ 
+  - **Selection bias**: ballots skewed toward the wealthy (with cars, phones)  \pause
+    - Only 1 in 4 households had a phone in 1936 \pause
+    
+  - **Nonresponse bias**: respondents differ from nonrespondents \pause
+    - $\rightsquigarrow$ when selection procedure is biased, adding more units won't help!  \pause
+    
+---
+
+# 1948 Election
+
+\includegraphics[width=1\textwidth]{figs/truman.png}
+
+---
+
+# The Polling Disaster
+
+\begin{center}
+\begin{tabular}{l r r r r}
+& Truman & Dewey & Thurmond & Wallace \\ \hline
+Crossley & 45 & 50 & 2 & 3 \\
+Gallup & 44 & 50 & 2 & 4 \\
+Roper & 38 & 53 & 5 & 4 \\ \hline
+Actual Outcome & 50 & 45 & 3 & 2
+\end{tabular}
+\end{center}
+ \pause
+ 
+  - **Quota sampling**: fixed quota of certain respondents for each interviewer \pause
+    - If Black women make up 5% of the population, stop interviewing them once they make up 5% of your sample \pause
+    
+  - Sample resembles the population on these characteristics \pause
+  - Potential unobserbed confounding $\rightsquigarrow$ **selection bias** \pause
+  - Republicans easier to find within quotas (phones, listed addresses)
+  
+---
+
+# Sample surveys
+ \pause
+ 
+  - **Probability sampling** to ensure representativeness \pause
+    - Definition: every unit in the population has a known, non-zero probability of being selected into sample \pause
+    
+  - **Simple random sampling**: every unit has an equal selection probability. \pause
+  
+  - Random digit dialing: \pause
+    - Take a particular area code + exchange: 310-495-XXXX. \pause
+    - Randomly choose each digit in XXXX to call a particular phone \pause
+    - Every phone in the US has an equal chance of being included in sample
+    
+---
+
+# Sampling lingo
+ \pause
+ 
+  - **Target population**: set of people we want to learn about \pause
+    - Example: people who will vote in the next election \pause
+    
+  - **Sampling frame**: list of people from which we will actually sample \pause
+    - Frame bias: list of registered voters (frame) might include nonvoters! \pause
+    
+  - **Sample**: set of people contacted \pause
+  
+  - **Respondents**: subset of sample that acutally responds to the survey \pause
+    - Unit non-response: sample $\neq$ respondents \pause
+    - Not everyone picks up their phone \pause
+    
+  - **Completed items**: subset of questions that respondents answer \pause
+    - Item non-response: refusing to disclose their vote preference
+  
+---
+
+# Difficulties of sampling
+ \pause
+ 
+  - Problems of telephone survey \pause
+    - Cell phones (double countring for the wealthy) \pause
+    - Caller ID screening (unit non-response) \pause
+    - Response rates down to 9% \pause
+    
+  - An alternative: internet surveys \pause
+    - Opt-in panels, respondent-driven sampling $\rightsquigarrow$ **non-probability sampling** \pause
+    - Cheaper, but non-representative \pause
+    - Digital divide: rich vs. poor, young vs. old \pause
+    - Correct for potential sampling bias via stastical methods  
+

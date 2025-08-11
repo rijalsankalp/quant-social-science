@@ -1,0 +1,22 @@
+\frametitle{Poll prediction for each state (my way)}
+\phantomsection\label{poll-prediction-for-each-state-my-way}
+\footnotesize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{poll.list }\OtherTok{\textless{}{-}} \FunctionTok{list}\NormalTok{()}
+\NormalTok{state\_names }\OtherTok{\textless{}{-}} \FunctionTok{unique}\NormalTok{(polls16}\SpecialCharTok{$}\NormalTok{state)}
+
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \FunctionTok{seq\_along}\NormalTok{(state\_names)) \{}
+\NormalTok{  state.data }\OtherTok{\textless{}{-}}\NormalTok{ polls16 }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{filter}\NormalTok{(state }\SpecialCharTok{==}\NormalTok{ state\_names[i]) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{filter}\NormalTok{(days\_to\_election }\SpecialCharTok{==} \FunctionTok{min}\NormalTok{(days\_to\_election)) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{mutate}\NormalTok{(}\AttributeTok{margin\_poll =} \FunctionTok{mean}\NormalTok{(margin)) }\SpecialCharTok{\%\textgreater{}\%}
+    \FunctionTok{select}\NormalTok{(state, margin\_poll)}
+\NormalTok{  poll.list[[i]] }\OtherTok{\textless{}{-}}\NormalTok{ state.data}
+  \FunctionTok{print}\NormalTok{(i)}
+\NormalTok{\}}
+\NormalTok{PollPred }\OtherTok{\textless{}{-}} \FunctionTok{do.call}\NormalTok{(rbind,poll.list)}
+\FunctionTok{head}\NormalTok{(PollPred)}
+\end{Highlighting}
+\end{Shaded}

@@ -1,0 +1,143 @@
+{{- define "main" -}} {{ $current_page := . }}
+
+<div class="container-fluid docs">
+  <div class="row flex-xl-nowrap">
+    <div class="col-12 col-md-3 col-xl-2 docs-sidebar">
+      {{ partial "docs_sidebar" . }}
+    </div>
+
+    {{ if .Params.toc }}
+    <div class="d-none d-xl-block col-xl-2 docs-toc">
+      <ul class="nav toc-top">
+        <li>
+          <a href="#" id="back_to_top" class="docs-toc-title"
+            >{{ i18n "on_this_page" }}</a
+          >
+        </li>
+      </ul>
+
+      {{ .TableOfContents }} {{ partial "docs_toc_foot" . }}
+    </div>
+    {{ end }}
+
+    <main
+      class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5 docs-content"
+      role="main"
+    >
+      <article class="article">
+        <div class="docs-article-container">
+          <h1>{{ .Title }}</h1>
+
+          <div class="article-style">
+            {{/* This renders the content from the body of your .Rmd file */}}
+            {{ .Content }}
+          </div>
+
+          {{/* --- START: Dynamic Schedule Content --- */}} {{ $currentWeekData
+          := index (where .Site.Data.schedule.lessons "week" .Params.week_id) 0
+          }} {{ if $currentWeekData }}
+          <div class="article-style">
+            <hr />
+            <section class="week-details">
+              <h2>Week Details</h2>
+              <ul>
+                <li><strong>Week:</strong> {{ $currentWeekData.weeknum }}</li>
+                <li>
+                  <strong>Date:</strong> {{ dateFormat "Monday, Jan 2, 2006"
+                  $currentWeekData.date }}
+                </li>
+                <li><strong>Title:</strong> {{ $currentWeekData.title }}</li>
+                {{ with $currentWeekData.goal }}
+                <li><strong>Goal:</strong> {{ . }}</li>
+                {{ end }}
+              </ul>
+              {{ with $currentWeekData.readings }}
+              <h3>Readings</h3>
+              <ul>
+                {{ range . }}
+                <li>
+                  {{- if .link }}<a href="{{ .link }}">{{ .name }}</a>{{ else
+                  }}{{ .name }}{{ end }} {{- with .day }}
+                  <span style="color: #888">({{ . }})</span>{{ end }}
+                </li>
+                {{ end }}
+              </ul>
+              {{ end }} {{ with $currentWeekData.slides }}
+              <h3>Slides</h3>
+              <ul>
+                {{ range . }}
+                <li>
+                  {{- if .link }}<a href="{{ .link }}">{{ .name }}</a>{{ else
+                  }}{{ .name }}{{ end }} {{- with .day }}
+                  <span style="color: #888">({{ . }})</span>{{ end }}
+                </li>
+                {{ end }}
+              </ul>
+              {{ end }} {{ with $currentWeekData.assignments }}
+              <h3>Assignments</h3>
+              <ul>
+                {{ range . }}
+                <li>
+                  {{- if .link }}<a href="{{ .link }}">{{ .name }}</a>{{ else
+                  }}{{ .name }}{{ end }} {{- with .due }}
+                  <span style="color: #888"
+                    >(Due: {{ dateFormat "Monday, Jan 2, 2006" . }})</span
+                  >{{ end }} {{- with .ins }}<br /><small>{{ . }}</small>{{ end
+                  }}
+                </li>
+                {{ end }}
+              </ul>
+              {{ end }}
+              {{ with $currentWeekData.exams }}
+              <h3>Exams</h3>
+              <ul>
+                {{ range . }}
+                <li>
+                  {{- if .link }}<a href="{{ .link }}">{{ .name }}</a>{{ else
+                  }}{{ .name }}{{ end }} {{- with .due }}
+                  <span style="color: #888"
+                    >(Due: {{ dateFormat "Monday, Jan 2, 2006" . }})</span
+                  >{{ end }} {{- with .ins }}<br /><small>{{ . }}</small>{{ end
+                  }}
+                </li>
+                {{ end }}
+              </ul>
+              {{ end }}{{ with $currentWeekData.classMaterials }}
+              <h3>Class Materials</h3>
+              <ul>
+                {{ range . }}
+                <li>
+                  {{- if .link }}<a href="{{ .link }}">{{ .name }}</a>{{ else
+                  }}{{ .name }}{{ end }} {{- if .download }}
+                  <span style="color: #888">(Download)</span>{{ end }}
+                </li>
+                {{ end }}
+              </ul>
+              {{ end }} {{ with $currentWeekData.notes }}
+              <h3>Notes</h3>
+              <p>{{ . }}</p>
+              {{ end }}
+            </section>
+          </div>
+          {{ end }} {{/* --- END: Dynamic Schedule Content --- */}} {{ partial
+          "tags.html" . }} {{ if site.Params.docs_section_pager }}
+          <div class="article-widget">{{ partial "section_pager" . }}</div>
+          {{ end }}
+        </div>
+
+        <div class="body-footer">
+          <p>
+            {{ i18n "last_updated" }} {{ $.Lastmod.Format
+            site.Params.date_format }}
+          </p>
+
+          {{ partial "page_edit" . }} {{ partial "comments" . }} {{ partial
+          "page_related" . }}
+        </div>
+      </article>
+
+      {{ partial "site_footer" . }}
+    </main>
+  </div>
+</div>
+{{- end -}}

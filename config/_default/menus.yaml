@@ -1,0 +1,22 @@
+main:
+  - name: Syllabus
+    url: /syllabus/
+    weight: 1
+  - name: Schedule
+    url: /schedule/
+    weight: 2
+  - name: Classes
+    url: /weeks/
+    weight: 3
+  - name: Resources
+    url: /resources/ 
+    weight: 4
+  - name: Downloads
+    url: /downloads/
+    weight: 5
+  - name: CampusWire
+    url: https://campuswire.com/p/GD7AC473D
+    weight: 6
+  - name: Blackboard
+    url: https://elearning.villanova.edu
+    weight: 7

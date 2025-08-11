@@ -1,0 +1,176 @@
+---
+title: "Problem Set 2"
+subtitle: "Sources of Empathy in the Circuit Courts"
+
+author: "[YOUR NAME]"
+institute: "Villanova University"
+
+date: 2025-02-07
+Due_Date: "2025-02-14 by 11:59PM ET"
+
+type: exams
+
+header-includes:
+  - \usepackage{fancyhdr}
+  - \pagestyle{fancy}
+  - \fancypagestyle{plain}{\pagestyle{fancy}}
+  - \fancyhead[L]{}
+  - \fancyhead[C]{}
+---
+
+
+
+
+
+
+
+
+<p><strong>If you utilized any assistance to complete this problem set (e.g., classmate, tutor, AI), you should cite it here:</strong> Type your answer here.</p>
+<hr />
+<p>In this problem set, we will analyze the relationship between the gender composition among a judge’s children and voting behavior among circuit court judges. In a recent paper, Adam N. Glynn and Maya Sen argue that having a female child causes circuit court judges to make more pro-feminist decisions. The paper can be found at:</p>
+<blockquote>
+<blockquote>
+<p>Glynn, Adam N., and Maya Sen. (2015). <a href="https://doi.org/10.1111/ajps.12118">“Identifying Judicial Empathy: Does Having Daughters Cause Judges to Rule for Women’s Issues?.”</a> <em>American Journal of Political Science</em> Vol. 59, No. 1, pp. 37–54.</p>
+</blockquote>
+</blockquote>
+<p>The dataset <code>judges.csv</code> contains the following variables about individual judges:</p>
+<table style="width:99%;">
+<colgroup>
+<col width="35%" />
+<col width="63%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Name</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><code>name</code></td>
+<td align="left">The judge’s name</td>
+</tr>
+<tr class="even">
+<td align="left"><code>child</code></td>
+<td align="left">The number of children each judge has.</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>circuit.1</code></td>
+<td align="left">Which federal circuit the judge serves in.</td>
+</tr>
+<tr class="even">
+<td align="left"><code>girls</code></td>
+<td align="left">The number of female children the judge has.</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>progressive.vote</code></td>
+<td align="left">The proportion of the judge’s votes on women’s issues which
+were decided in a pro-feminist direction.</td>
+</tr>
+<tr class="even">
+<td align="left"><code>race</code></td>
+<td align="left">The judge’s race (<code>1</code> = white, <code>2</code> = African-American,
+<code>3</code> = Hispanic, <code>4</code> = Asian-American).</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>religion</code></td>
+<td align="left">The judge’s religion (<code>1</code> = Unitarian, <code>2</code> = Episcopalian, <code>3</code> = Baptist,
+<code>4</code> = Catholic, <code>5</code> = Jewish, <code>7</code> = Presbyterian, <code>8</code> = Protestant,
+<code>9</code> = Congregationalist, <code>10</code> = Methodist, <code>11</code> = Church of Christ,
+<code>16</code> = Baha’i, <code>17</code> = Mormon, <code>21</code> = Anglican, <code>24</code> = Lutheran, <code>99</code> = unknown).</td>
+</tr>
+<tr class="even">
+<td align="left"><code>republican</code></td>
+<td align="left">Takes a value of <code>1</code> if the judge was appointed by a Republican president, <code>0</code> otherwise.
+Used as a proxy for the judge’s party.</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>sons</code></td>
+<td align="left">The number of male children the judge has.</td>
+</tr>
+<tr class="even">
+<td align="left"><code>woman</code></td>
+<td align="left">Takes a value of <code>1</code> if the judge is a woman, <code>0</code> otherwise.</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>X</code></td>
+<td align="left">Indicator for the observation number.</td>
+</tr>
+<tr class="even">
+<td align="left"><code>yearb</code></td>
+<td align="left">The year the judge was born.</td>
+</tr>
+</tbody>
+</table>
+<div id="question-1-5-points" class="section level2">
+<h2>Question 1 (5 points)</h2>
+<p>Load the <code>judges.csv</code> file into a data frame called <code>judges</code>. Create a cross-tab (of proportions, not counts) of judge gender on the rows and whether the appointing president was Republican on the columns. Save this table with the name <code>gender_rep_table</code>. In your write-up, answer the following questions:</p>
+<ul>
+<li>How many judges are in this data set?</li>
+<li>What proportion of the judges are men?</li>
+<li>Is the party composition different for male and female judges?</li>
+</ul>
+</div>
+<div id="answer-1" class="section level2">
+<h2>Answer 1</h2>
+<p>Write answer here.</p>
+</div>
+<div id="question-2-4-points" class="section level2">
+<h2>Question 2 (4 points)</h2>
+<p>Our outcome in this exercise will be the proportion of feminist rulings on issues related to gender, <code>progressive_vote</code>. Create a nicely formatted histogram of this variable and provide a written summary of this graph. Roughly speaking, where is the region of highest density of this variable?</p>
+<p>NOTE: nicely formatted means axis labels and a main title that don’t contain random R syntax and informative labels.</p>
+</div>
+<div id="answer-2" class="section level2">
+<h2>Answer 2</h2>
+<p>Write answer here.</p>
+</div>
+<div id="question-3-6-points" class="section level2">
+<h2>Question 3 (6 points)</h2>
+<p>Next, we consider differences between some groups. Create a new factor variable called <code>gender_party</code> that takes on separate values for each of the four groups:</p>
+<ul>
+<li><code>"Dem. Woman"</code> for women appointed by Democratic presidents</li>
+<li><code>"Rep. Woman"</code> for women appointed by Republican presidents</li>
+<li><code>"Dem. Man"</code> for men appointed by Democratic presidents</li>
+<li><code>"Rep. Man"</code> for men appointed by Republican presidents</li>
+</ul>
+<p>Calculate the mean of <code>progressive_vote</code> in each of these groups and save this vector as <code>gender_party_means.</code> Plot these means using a barplot.</p>
+<p>Briefly interpret the results of the analysis. For example, do any of the results surprise you? Does it appear that partisanship, gender, or both contribute to progressive voting patterns? Should we interpret any of these effects causally? Why or why not?</p>
+</div>
+<div id="answer-3" class="section level2">
+<h2>Answer 3</h2>
+<p>Write answer here.</p>
+</div>
+<div id="question-4-4-points" class="section level2">
+<h2>Question 4 (4 points)</h2>
+<p>What is the difference in the proportion of pro-feminist decisions between judges who have at least one daughter and those who do not have any? To compute this difference, first create a variable called <code>any_girls</code> that is 1 when the judge has at least 1 girl and 0 otherwise. Then, create a subset of the data called <code>parents</code> that contains judges that have at least one child. Create an object called <code>ate</code> that is the difference in means of <code>progressive_vote</code> between judges that have at least one girl versus those that have no girls among those judges with any children.</p>
+<p>Why might we worry about interpreting this estimate causally, considering number of children as a possible confounder?</p>
+</div>
+<div id="answer-4" class="section level2">
+<h2>Answer 4</h2>
+<p>Write answer here.</p>
+</div>
+<div id="question-5-6-points" class="section level2">
+<h2>Question 5 (6 points)</h2>
+<p>Given that the number of children might be a confounder for the relationship between number of girls and voting, let’s estimate the effects using statistical control for the number of children using the following steps:</p>
+<ul>
+<li>Create one subset of the data called <code>girls_123</code> that restricts to judges with one, two or three children and have at least one girl.</li>
+<li>Create another subset of the data called <code>nogirls_123</code> that restricts to judges with one, two or three children and have no girls.</li>
+<li>Calculate the mean of <code>progressive_vote</code> within levels of the numbers of kids (<code>num_kids</code>) for each of these subsets and save these vectors as <code>girls_vote_by_nkids</code> and <code>nogirls_vote_by_nkids.</code></li>
+<li>Use <code>inner_join</code> to combine the two data subsets then estimate the average treatment effect within levels, saving this vector as <code>ate_nkids</code>.</li>
+</ul>
+<p>Are these estimated effects largely similar or largely different than what you found using all of the data? What assumption do you need to make to interpret these effects causally? Do you think it is plausible in this case?</p>
+</div>
+<div id="answer-5" class="section level2">
+<h2>Answer 5</h2>
+<p>Write answer here.</p>
+</div>
+<div id="question-6-extra-credit-5-points" class="section level2">
+<h2>Question 6 (EXTRA CREDIT, 5 points)</h2>
+<p><strong>This problem is optional. Any points earned on this problem can be applied to lost points on other parts of the problem set. You cannot earn more than the maximum score on the problem set.</strong></p>
+<p>Let’s consider the design of this study. The original authors assume that, conditional on the number of children a judge has, the number of daughters is random (as we did in the previous question). If this is true, half of a judge’s children should be female, on average. A deviation from this proportion could indicate that a gender preference among judges due a stopping rule such as “have children until we get one girl,” which would violate the randomization assumption.</p>
+<p>To check this assumption, use the subset of judges with at least one child and create and save a vector that contains the total number of girls (across all judges) for each level of the number of children. Create and save another vector that is the total number of children (across all judges) for each level of the number of children. (HINT: you might check out the <code>sum</code> function to help carry out these steps.) Next, divide the total number of girls vector by the total number of children vector to create a new vector that is the proportion girls for each family type. Create a barplot that plots these proportions on the y-axis with the number of children on the x-axis. This barplot should have (a) informative labels on each axis, (b) a y-axis range that runs from 0 to 1, and (c) a horizontal line at 0.5 to compare against. Does it appear that there is strong gender preference/selection happening among judges?</p>
+</div>
+<div id="answer-6" class="section level2">
+<h2>Answer 6</h2>
+<p>Write answer here.</p>
+</div>

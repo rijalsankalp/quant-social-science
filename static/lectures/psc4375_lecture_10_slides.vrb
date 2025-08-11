@@ -1,0 +1,35 @@
+\frametitle{Coefficients and fitted values}
+\phantomsection\label{coefficients-and-fitted-values}
+\begin{itemize}
+\tightlist
+\item
+  Use \texttt{coef()} to extract estimated coefficients:
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{coef}\NormalTok{(fit)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##   (Intercept) obama.intmarg
+##     5.5681423     0.2799326
+\end{verbatim}
+
+\begin{itemize}
+\tightlist
+\item
+  R can show you each of the fitted values as well:
+\end{itemize}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{head}\NormalTok{(}\FunctionTok{fitted}\NormalTok{(fit))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##        1        2        3        4        5        6
+## 5.568142 5.568142 5.568142 5.568142 5.568142 5.568142
+\end{verbatim}

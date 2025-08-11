@@ -1,0 +1,59 @@
+---
+title: "QSS R Tutorials Instructions"
+author: "Prof. Weldzius"
+date: 2025-08-11
+
+institute: "Villanova University"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,error=TRUE,warning = FALSE,message = FALSE)
+```
+
+##  Installing the QSS tutorials pacakge
+
+To install the package that contains the tutorials for the class run the following lines of code, each entered separately. Note that you may be asked to update packages when you enter this code. You can select 1 for "All" to perform any updates.
+
+```{r,eval = FALSE}
+remotes::install_github("kosukeimai/qss-package", build_vignettes = TRUE)
+remotes::install_github("rstudio/learnr")
+remotes::install_github("rstudio-education/gradethis")
+remotes::install_github("mattblackwell/qsslearnr")
+```
+
+After the package has been installed, you should be able to find all of the tutorials for the course in the "Tutorials" tab in the top-right pane of RStudio. Scroll down to find a QSS tutorial and click "Start Tutorial" to launch a tutorial:
+
+<center><img style="border:1px solid black;" src="../Lectures/figs/rstudio-tutorials.png" width = 70%></center>
+
+If you do not see any QSS tutorials after scrolling to the bottom, try to restart RStudio and check again. If you still don’t see any tutorials, confirm that you have installed the package by running `library(qsslearnr)`. If you get an error about the package not being installed, try the above installation procedure again and note any error messages you receive before reaching out to the teaching staff for assistance.
+
+## Submission Reports
+
+Once you have completed the tutorial you will see a screen that prompts you to enter your name and produce a submission report. Clicking "Download" should place a report into the folder of your choosing. Find that PDF and upload it to Blackboard (not Gradescope as the system suggests).
+
+<center><img style="border:1px solid black;" src="../Lectures/figs/tutorial-report.png" width = 70%></center>
+
+Note that I do not grade these reports on correctness, just that you attempted the entire tutorial. That said, going slowly and making sure that you understand each question and its answer is a good practice to ensure you are mastering the course material.
+
+## FAQs
+
+**What if I receive an error about `pdflatex` and the submission report doesn't download?**
+
+To generate the reports, you need something called LaTeX. The details are boring, so you can just install a quick version of this software with the following two lines of R code:
+
+```{r,eval = FALSE}
+install.packages('tinytex')
+tinytex::install_tinytex()  # install TinyTeX
+```
+
+**What if I don’t see a Tutorial tab in RStudio?**
+
+Make sure that you have RStudio version 1.3 or higher installed on your computer. On a Mac, you can check the version by going to the top left of the menu bar (next to the Apple logo) and clicking on "RStudio" then "About RStudio". On a Windows PC, you can find the same item under File > About.
+
+**What if my submission report misses some of my attempts?**
+
+The submission report isn't perfect and will sometimes say you didn't attempt a question when you actually did. I do not grade strictly on this and am mostly looking for a confirmation that you made a good-faith effort to complete the tutorial.
+
+
+
+

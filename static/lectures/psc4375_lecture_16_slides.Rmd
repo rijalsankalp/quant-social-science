@@ -1,0 +1,1167 @@
+---
+title: "Probability: Random Variables and Large Samples"
+subtitle: "PSC4375: Week 10"
+author: "Prof. Weldzius"
+institute: "Villanova University"
+date: "Slides Updated: `r Sys.Date()`"
+output:
+  beamer_presentation:
+    theme: "CambridgeUS"
+    colortheme: "seahorse"
+    fonttheme: "structurebold"
+header-includes:
+  - \usepackage{tikz}
+  - \usepackage{graphicx} 
+  - \usepackage{amssymb}
+  - \usepackage{fontenc}
+  - \usepackage{xcolor}    
+  - \usepackage{array}
+# classoption: "handout"
+---
+
+```{css,echo = F}
+.small .remark-code { /*Change made here*/
+  font-size: 85% !important;
+}
+.tiny .remark-code { /*Change made here*/
+  font-size: 50% !important;
+}
+```
+
+```{r,include=F}
+set.seed(123)
+options(width=60)
+knitr::opts_chunk$set(fig.align='center',fig.width=9,fig.height=5,message=F,warning=F)
+def.chunk.hook  <- knitr::knit_hooks$get("chunk")
+knitr::knit_hooks$set(chunk = function(x, options) {
+  x <- def.chunk.hook(x, options)
+  ifelse(options$size != "normalsize", paste0("\n \\", options$size,"\n\n", x, "\n\n \\normalsize"), x)
+})
+library(tidyverse)
+library(tinytex)
+library(gridExtra)
+```
+
+# Learning about populations
+
+\begin{center}
+\begin{tikzpicture}[align=center]
+  \node[draw, circle, minimum size=3cm, align=center] (pop) at (0,0) {Population}; 
+  \node[draw, circle, minimum size=3cm, align=center] (sample) at (4,0) {Sample}; 
+  \draw[->, bend left=45, thick] (pop) to (sample); 
+  \node at (2, 1.7) {Probability};
+  \draw[->, bend right=315, thick] (sample) to (pop);
+  \node at (2, -1.7) {Inference};
+\end{tikzpicture}
+\end{center}
+
+  - We want to learn about the chance process that generated our data. \pause
+    - What’s the true support for Trump in the population? \pause
+    - We only get to see a sample from the population. \pause
+    - Stare at the results of 1000 coin flips and determine if the coin was fair. \pause
+  - We have probability to help us, but...
+  
+---
+
+# What are random variables?
+
+$$
+\{\text{draw a Trump supporter}\} \overset{???}{\longleftrightarrow} \bar{X} = \frac{1}{n}\sum_{i=1}^n X_i
+$$
+
+---
+
+# Randomly selecting senators, redux
+
+\[
+\begin{array}{|c|c c c|c|}
+\hline
+ & Democrats & Republicans & Independents & Total \\
+\hline
+Men & 29 & 43 & 2 & 74 \\
+Women & 16 & 10 & 0 & 26 \\
+\hline
+Total & 45 & 53 & 2 & 100 \\
+\hline
+\end{array}
+\]
+
+  - Draw a Senator’s name from a hat and define the random variable: \pause
+  - A **random variable** is a mapping from the outcomes to numbers. \pause
+    - Example: $X = 1$ if selected Senator is a woman, $X = 0$ otherwise
+  - **Random**: before we draw, there is uncertainty about the value of $X$!
+  - Straightforward probability connection:
+  
+  $$
+  \mathbb{P}(X=1) = \mathbb{P}(\text{draw a woman senator}) = \frac{26}{100}
+  $$
+
+---
+
+# Bernoulli r.v.
+
+\centering 
+![](figs/bernoulli.jpg){width=25%} \pause
+
+  - An r.v. is $X$ is said to follow a Bernoulli distribution with probability $p$ if:  \pause
+    - $X$ takes on only two values, $0$ and $1$, and \pause
+    - $\mathbb{P}(X=1) = p$ and $\mathbb{P}(X=0) = 1 - p$ \pause
+  - Simplest possible random variable: indicator/binary variable. \pause
+  - Distribution of a Bernoulli r.v. entirely determined by $p$. \pause
+    - Infinite number of possible Bernoulli r.v.s: one for each value of $p$.
+
+---
+
+# Why random variables?
+
+  - Why go through the trouble of defining random variables? \pause
+    - Allows us to think about the uncertainty of our estimates. \pause
+    - Before analyzing sample means useful to detour into sample sums. \pause
+  - Extremely small data example: sample two senators with replacement. \pause
+    - $X_1 = 1$ if senator $1$ is a woman, $X_1 = 0$ otherwise \pause
+    - $X_2 = 1$ if senator $2$ is a woman, $X_2 = 0$ otherwise \pause
+  - Define the sum of these: $S = X_1 + X_2$ (also an r.v.) \pause
+  - What sums should we expect to see? \pause
+    - How surprised should we be if $S=1$? \pause
+    - What is the probability of each possible value, $\mathbb{P}(S=k)$
+
+<!-- --- -->
+
+<!-- # Inducing probabilities: -->
+
+<!--   - $S$ be the number of women in two independent draws -->
+
+<!-- \[ -->
+<!-- \begin{array}{cc} -->
+<!-- \begin{tabular}{l c | l} -->
+<!-- outcome & $S$ & prob. \\ -->
+<!-- \hline -->
+<!-- MM & 0 & 3 \\ -->
+<!-- WM & 1  & 0.5476 \\ -->
+<!-- MW & 1 & 0.1924 \\ -->
+<!-- WW & 2 & 0.0676 \\ -->
+<!-- \end{tabular} -->
+<!-- & -->
+<!-- \begin{tabular}{c|l} -->
+<!-- $k$ & $\mathbb{P}(S=k)$ \\ -->
+<!-- \hline -->
+<!-- 0 & 0.5476 \\ -->
+<!-- 1 & 0.3848 \\ -->
+<!-- 2 & 0.0676 \\ -->
+<!-- \end{tabular} -->
+<!-- \end{array} -->
+<!-- \] -->
+
+
+---
+
+# Binomial distribution
+
+\pause 
+- **Binomial r.v.**: \(X\) takes on any integer between 0 and \(n\). \pause 
+  - Number of heads in \(n\) independent coin flips with probability \(p\) of heads. \pause 
+  - ``Binomial with \(n\) trials and probability of success \(p\)'' \pause 
+- Example: random draws of two senators, \(Y\) is how many are women? \pause 
+  - Binomial with \(n = 2\) and \(p = 0.26\). \pause 
+- **Probability mass function** gives the probability of any possible value: \pause 
+  \[
+  \mathbb{P}(X = k) = \binom{n}{k} p^k (1-p)^{n-k}  \pause
+  \]
+  where \(\binom{n}{k} = \frac{n!}{k!(n-k)!}\)
+
+---
+
+# Binomial distribution (n = 10, p = 0.5)
+
+ \pause
+
+```{r, echo=FALSE}
+# Parameters
+n <- 10
+p <- 0.5
+# Generate a sequence of possible successes (from 0 to n)
+x <- 0:n
+# Calculate the probability mass function (PMF) for the binomial distribution
+pmf <- dbinom(x, size = n, prob = p)
+# Create a data frame for plotting
+binomial_data <- tibble(successes = x, probability = pmf)
+```
+
+```{r, echo=FALSE, fig.width=4, fig.height=3}
+# Plot the binomial distribution
+binomial_data %>%
+  ggplot(aes(x = successes, y = probability)) +
+  geom_bar(stat = "identity", fill = "skyblue", color = "black") +
+  scale_x_continuous(breaks=seq(0,10,2)) +
+  labs(title = "",
+       x = "x",
+       y = "f(x)") +
+  theme_bw()
+```
+
+---
+
+# More calls to senators
+
+*You work as a lobbyist and you've been asked to check to see the gender balance of the calls placed to Senate offices from your firm. The firm has placed 1000 calls over the last year. If the firm was randomly choosing senators (with replacement) each call, what numbers of women senators contacted would be more or less plausible?* \pause 
+
+  - That math formula for $\mathbb{P}(X=k)$ looked not very fun... \pause 
+  - We can **simulate** data from this distribution using `rbinom()`. \pause 
+  
+```{r, results='hide'}
+rbinom(n = 5, size = 1000, prob = 0.26)
+```
+\pause 
+```{r, echo=FALSE}
+rbinom(n = 5, size = 1000, prob = 0.26)
+```
+
+---
+
+# Simulations
+
+```{r, results='hide'}
+sims <- 10000
+
+draws <- rbinom(sims, size = 1000, prob = 0.26)
+```
+\pause
+```{r}
+length(draws)
+```
+
+\pause 
+```{r, echo=FALSE}
+sims <- 10000
+
+draws <- rbinom(sims, size = 1000, prob = 0.26)
+```
+\pause 
+```{r, results='hide'}
+mean(draws)
+```
+\pause 
+```{r, echo=FALSE}
+mean(draws)
+```
+
+---
+
+# Simulations
+
+```{r, echo=FALSE, fig.height=3, fig.width=4}
+draws_df <- data.frame(draws)
+
+# Plot the histogram
+ggplot(draws_df, aes(x = draws)) +
+  geom_histogram(aes(y = ..density..), binwidth = 10, fill = "black", alpha = 0.5) +
+  geom_vline(xintercept = 260, color = "red", size = 1) +
+  labs(x = "Draws of Number of Calls to Women Senators", y = "Density") +
+  xlim(0, 1000) +
+  ylim(0, 0.04) +
+  theme_bw()
+```
+
+
+---
+
+# Probability distributions 
+
+\begin{center}
+\begin{tikzpicture}[align=center]
+  \node[draw, circle, minimum size=3cm, align=center] (pop) at (0,0) {Population};
+  \node[draw, circle, minimum size=3cm, align=center] (sample) at (4,0) {Sample};
+  \draw[->, bend left=45, thick] (pop) to (sample);
+  \node at (2, 1.7) {Probability};
+  \draw[->, bend right=315, thick] (sample) to (pop);
+  \node at (2, -1.7) {Inference};
+\end{tikzpicture}
+\end{center}
+
+  - We want to learn about the chance process that generated our data.
+  - More specifically: learn about the **distribution** of the r.v.s in our data.
+    - What values of the r.v. are more or less likely?
+
+---
+
+# Probability distribution
+
+\pause 
+
+  - **Probability distributions** describe the uncertainty of a random variable  \pause
+    - Functions that give the probability of different possible values of an r.v.  \pause
+    - Why do we care? **Learning about populations from samples** \pause
+  - Simple example: suppose we randomly sample a single US adult \pause
+    - Let $X$ be 1 if they support Trump, 0 otherwise. \pause
+    - $X$ is Bernoulli with some probability $p$ \pause
+    - Learning $p$ would give us the probability a random adult supports Trump \pause
+  - Multiple ways to represent the distribution \pause
+    - Depends on what kind of r.v. we have.
+
+---
+
+# Types of random variables
+
+  - **Discrete**: $X$ can take a finite (countable infinite) number of values.  \pause
+    - Number of heads in 5 coin flips  \pause
+    - Sample senator is a woman ($X=1$) or not ($X=0$) \pause
+    - Number of battle deaths in a civil war  \pause
+    - Number of journalists on a Signal chat with Executive branch officials \pause 
+  - **Continuous**: $X$ can take any real value (usually within an interval) \pause
+    - GDP per capita (average income) in a country  \pause
+    - Share of population that approves of Trump  \pause
+    - Amount of time spent on TikTok \pause
+    - Amount of trade affected by US vs. Everyone Else trade war
+
+---
+
+# Probability mass functions
+
+  - For discrete r.v.s: **probability mass function (PMF)**  \pause
+    - Gives the probability of each possible value, $\mathbb{P}(X = k)$.  \pause
+    - Like a bar plot for the population shares of each value.  \pause
+    - Here's the PMF for the Bernoulli of drawing a woman senator:  \pause
+
+```{r, echo=FALSE, fig.height=2, fig.width=3}
+prob <- c(0.75, 0.25)  # Pr(X=0) = 0.75 and Pr(X=1) = 0.25
+outcome <- c(0, 1)     # Possible outcomes: 0 and 1
+
+# Create a data frame for plotting
+pmf_data <- data.frame(outcome, prob)
+
+# Plot the Bernoulli PMF using ggplot
+ggplot(pmf_data, aes(x = factor(outcome), y = prob)) +
+  geom_bar(stat = "identity", fill = "skyblue", width=0.5) +
+  labs(x = "k", y = "Pr(X=k)", title = "") +
+  scale_y_continuous(limits = c(0, 1), breaks = seq(0, 1, by = 0.2)) +
+  theme_bw()
+```
+
+---
+
+# Binomial PMFs
+
+\pause
+
+  - PMFs expressed in mathematical formulas depending on **parameters**.  \pause
+    - Binomial with $n$ draws and probability of "success" $p$:  \pause
+
+$$
+\mathbb{P}(X = k) = \binom{n}{k} p^k (1-p)^{n-k}
+$$
+
+\pause
+  - We'll almost always use R to calculate the PMF. \pause
+  - We can use the `dbinom()` function to calculate the PMF of a Binomial r.v. \pause
+
+```{r}
+dbinom(x = c(0, 1, 2), size = 2, prob = 26/100)
+```
+
+---
+
+# Binomial PMF plot
+
+```{r, echo=F, fig.width=4, fig.height=3}
+probabilities <- dbinom(x = c(0, 1, 2), size = 2, prob = 26/100)
+
+# Create a data frame for plotting
+x <- c(0, 1, 2)
+binom_data <- data.frame(x, probabilities)
+
+# Plot the binomial PMF using ggplot
+ggplot(binom_data, aes(x = factor(x), y = probabilities)) +
+  geom_bar(stat = "identity", fill = "skyblue", width = 0.5) +  # Set the width of the bars
+  labs(x = "x", y = "f(x)", title = "") +
+  scale_y_continuous(limits = c(0, 1), breaks = seq(0, 1, by = 0.2)) +
+  theme_bw()
+```
+
+---
+
+# Probability density functions
+
+  - For continuous r.v.s, **probability density function (PDF)** \pause
+    - Gives density of probability around a given point \pause
+    - Like an "infinite" histogram $\rightsquigarrow$ so many bins that things look smooth \pause
+    - Area under the curve = prob. of some interval \pause
+
+```{r, echo=FALSE, fig.height=2.5, fig.width=3.5}
+# Create the data for the uniform distribution
+df <- data.frame(
+  x = c(-1, 0, 1, 2),
+  y = c(0, 1, 0, 0)
+)
+
+# Plot the uniform PDF with ggplot
+ggplot() +
+  # Plot the step lines for the uniform distribution, without vertical lines
+  geom_segment(aes(x = -1, y = 0, xend = 0, yend = 0), color = "black") + # Segment from (-1,0) to (0,0)
+  # geom_segment(aes(x = 0, y = 0, xend = 0, yend = 1), color = "black") + # Vertical line from (0,0) to (0,1)
+  geom_segment(aes(x = 0, y = 1, xend = 1, yend = 1), color = "black") + # Segment from (0,1) to (1,1)
+  # geom_segment(aes(x = 1, y = 1, xend = 1, yend = 0), color = "black") + # Vertical line from (1,1) to (1,0)
+  geom_segment(aes(x = 1, y = 0, xend = 2, yend = 0), color = "black") + # Segment from (1,0) to (2,0)
+
+# Add dashed lines at x = 0 and x = 1
+geom_segment(aes(x = 0, y = 0, xend = 0, yend = 1), linetype = "dashed") +
+geom_segment(aes(x = 1, y = 0, xend = 1, yend = 1), linetype = "dashed") +
+
+# Add open circles at (0, 0) and (1, 0)
+geom_point(aes(x = 0, y = 0), shape = 21, colour = "black", fill = "white", size = 4) +
+geom_point(aes(x = 1, y = 0), shape = 21, colour = "black", fill = "white", size = 4) +
+  
+# Add closed circles at (0, 1) and (1, 1)
+geom_point(aes(x = 0, y = 1), shape = 19, size = 4, color = "black") +
+geom_point(aes(x = 1, y = 1), shape = 19, size = 4, color = "black") +
+
+# Customize labels and theme
+scale_y_continuous(limits = c(0, 1.5), breaks = seq(0, 1.5, by = 0.5)) +
+labs(x = "x", y = "f(x)", title = "") +
+theme_bw() +
+theme(axis.text = element_text(size = 12),
+      axis.title = element_text(size = 14))
+```
+
+---
+
+# Cumulative distribution function
+
+  - **Cumulative distribution function (CDF)**: $F_X (k) = \mathbb{P}(X \leq k)$ \pause
+    - Returns the probability of $X$ being at $k$ or lower. \pause
+    - Area under the density for a continuous r.v. \pause
+    - Never decreasing as $k$ gets bigger. \pause
+    - Drawing two women senators example: \pause
+
+```{r, echo=FALSE, fig.height=2.5, fig.width=5}
+library(patchwork)
+# Define parameters for the binomial distribution
+x <- c(0, 1, 2)
+size <- 2
+prob <- 26 / 100
+
+# Compute the probabilities for the PMF using dbinom
+probabilities <- dbinom(x, size, prob)
+
+# Create a data frame for plotting
+binom_data <- data.frame(x, probabilities)
+
+# First plot: Binomial PMF (Probability Mass Function)
+pmf_plot <- ggplot(binom_data, aes(x = factor(x), y = probabilities)) +
+  geom_bar(stat = "identity", fill = "skyblue", width = 0.5) +  # Set the width of the bars
+  labs(x = "x", y = "f(x)", title = "PMF") +
+  scale_y_continuous(limits = c(0, 1), breaks = seq(0, 1, by = 0.2)) +
+  theme_bw()
+
+# Compute the cumulative probabilities for the CDF using cumsum
+cdf_probabilities <- cumsum(probabilities)
+
+# Second plot: Binomial CDF (Cumulative Distribution Function)
+cdf_plot <- ggplot() +
+  # Plot the step lines for the uniform distribution, without vertical lines
+  geom_segment(aes(x = -.5, y = 0, xend = 0, yend = 0), color = "black") + # Segment from (-1,0) to (0,0)
+  geom_segment(aes(x = 0, y = 0.5476, xend = 1, yend = 0.5476), color = "black") + # Segment from (0,1) to (1,1)
+  geom_segment(aes(x = 1, y = .9324, xend = 2, yend = .9324), color = "black") + # Segment from (1,0) to (2,0)
+  geom_segment(aes(x = 2, y = 1, xend = 2.5, yend = 1), color = "black") + # Segment from (1,0) to (2,0)
+  geom_point(aes(x = 0, y = 0), shape = 21, colour = "black", fill = "white", size = 4) +
+  geom_point(aes(x = 1, y = 0.5476), shape = 21, colour = "black", fill = "white", size = 4) +
+  geom_point(aes(x = 2, y = .9324), shape = 21, colour = "black", fill = "white", size = 4) +
+  geom_point(aes(x = 0, y = 0.5476), shape = 19, size = 4, color = "black") +
+  geom_point(aes(x = 1, y = .9324), shape = 19, size = 4, color = "black") +
+  geom_point(aes(x = 2, y = 1), shape = 19, size = 4, color = "black") +
+
+# Customize labels and theme
+scale_y_continuous(limits = c(0, 1.2), breaks = seq(0, 1.2, by = 0.2)) +
+scale_x_continuous(limits = c(-.5, 2.5), breaks = seq(-.5, 2.5, by = 0.5)) +
+labs(x = "x", y = "f(x)", title = "CDF") +
+theme_bw() +
+theme(axis.text = element_text(size = 10),
+      axis.title = element_text(size = 12))
+
+# Arrange both plots side by side using grid.arrange
+pmf_plot + cdf_plot
+```
+
+---
+
+# Let's recall our goal again:
+
+\begin{center}
+\begin{tikzpicture}[align=center]
+  \node[draw, circle, minimum size=3cm, align=center] (pop) at (0,0) {Population};
+  \node[draw, circle, minimum size=3cm, align=center] (sample) at (4,0) {Sample};
+  \draw[->, bend left=45, thick] (pop) to (sample);
+  \node at (2, 1.7) {Probability};
+  \draw[->, bend right=315, thick] (sample) to (pop);
+  \node at (2, -1.7) {Inference};
+\end{tikzpicture}
+\end{center}
+
+  - We want to learn about the chance process that generated our data.
+  - Last time: entire probability distributions. Is there something simpler?
+
+---
+
+\LARGE Expectation, Variance, and Sample Means
+
+---
+
+# How can we summarize distributions?
+
+\pause
+  - Two numerical summaries of the distribution are useful. \pause
+    - **Mean/expectation**: where the distribution is. \pause
+    - **Variance/standard deviation**: how spread out the distribution is around the center. \pause \vspace{5pt}
+  - These are **population parameters** so we don't get to observe them. \pause
+    - We won't get to observe them... \pause
+    - but we'll use our sample to learn about them.
+
+---
+
+# Two ways to calculate averages
+
+  - Calculate the average of: {1,1,1,3,4,5,5}  \pause
+
+$$
+\frac{1 +1+1+3+4+4+5+5}{8} = 3
+$$
+
+ \pause
+
+  - Alternative way to calculate average based on **frequency weights**:
+
+$$
+1 \times \frac{3}{8} \times 3 \times \frac{1}{8} \times 4 \times \frac{2}{8} \times 5 \times \frac{2}{8} = 3
+$$
+
+ \pause
+
+  - Each value times how often that value occurs in the data  \pause
+  - We'll use this intuition to create an average/mean for r.v.s.
+
+---
+
+# Expectation
+
+  - We write $\mathbb{E}(X)$ for the **mean** of an r.v. $X$. \pause
+  - For discrete $X \in \{ x_1, x_2, ..., x_k \}$ with $k$ levels:
+
+$$
+\mathbb{E}[X] = \sum_{j=1}^k \textcolor{blue}{x_j} \textcolor{red}{\mathbb{P}(X=x_j)}
+$$
+
+\pause
+
+  - Weighted average of the \textcolor{blue}{values} of the r.v. weighted by the \textcolor{red}{probability of each value occurring}.\pause
+  - If $X$ is age of randomly selected registered voter, then $\mathbb{E}(X)$ is the average age in the population of registered voters. \pause
+  - Notation notes: \pause
+    - Lots of other ways to refer to this: **expectation** or **expected value** \pause
+    - Often call the **population mean** to distinguish from the sample mean
+
+---
+
+# Properties of the expected value
+
+  - We use properties of $\mathbb{E}(X)$ to avoid using the formula every time. \pause 
+  - Let $X$ and $Y$ be r.v.s and $a$ and $b$ be constants \pause 
+  1. $\mathbb{E}(a) = a$ \pause 
+      - constants don't vary \pause 
+  2. $\mathbb{E}(aX) = a\mathbb{E}(X)$ \pause 
+      - Suppose $X$ is income in dollars, income in \$10k is just: $X/1000$ \pause 
+      - Mean of this new variable is mean of income in dollars divided by 10,000 \pause 
+  3. $\mathbb{E}(aX + bY) = a\mathbb{E}(X) + b\mathbb{E}(Y)$ \pause 
+      - Expectations can be distributed across sums \pause 
+      - $X$ is partner 1's income, $Y$ is partner 2's income \pause 
+      - Mean household income is the sum of each partner's income
+
+---
+
+# Variance
+
+  - The **variance** measures the spread of the distribution:  \pause
+
+$$
+\mathbb{V}[X] = \mathbb{E}[(X-\mathbb{E}[X])^2]
+$$
+
+ \pause
+ 
+  - Weighted average of the squared distances from the mean. \pause
+    - Larger deviations ($+$ or $-$) $\rightsquigarrow$ higher variance \pause
+  - If $X$ is the age of a randomly selected registered voter, $\mathbb{V}[X]$ is the usual sample variance of age in the population \pause
+    - Sometimes called **population variance** to contrast with sample variance. \pause
+  - **Standard deviation**: square root of the variance: $SD(X) = \sqrt{\mathbb{V}[X]}$. \pause
+    - Useful because it's on the scale of the original variable.
+
+---
+
+# Properties of variances
+
+ \pause
+ 
+- Some properties of variance useful for calculation \pause
+1. If $b$ is a constant, then $\mathbb{V}[b] = 0$. \pause
+2. If $a$ and $b$ are constants, $\mathbb{V}[aX+b] = a^2\mathbb{V}[X]$. \pause
+3. In general, $\mathbb{V}[X+Y] \neq \mathbb{V}[X] +\mathbb{V}[Y]$ \pause
+    - If $X$ and $Y$ are independent, then $\mathbb{V}[X+Y] = \mathbb{V}[X] +\mathbb{V}[Y]$
+
+---
+
+# Sums and means are random variables
+
+ \pause
+ 
+  - If $X_1$ and $X_2$ are r.v.s, then $X_1 + X_2$ is an r.v. \pause
+    - Has a mean $\mathbb{E}[X_1+X_2]$ and a variance $\mathbb{V}[X_1+X_2]$ \pause
+  - The **sample mean** is a function of sums and so it is an r.v. too: \pause
+
+$$
+\bar{X} = \frac{X_1 + X_2}{2}
+$$
+
+ \pause
+ 
+  - Example: the average of two randomly selected respondents.
+
+---
+
+# Independent and identical r.v.s
+
+ \pause
+ 
+- **Independent and identically distributed** r.v.s, $X_1,...,X_n$ \pause
+  - Random sample of $n$ respondents on a survey question 
+  - Written "i.i.d." 
+- **Independent**: value that $X_i$ takes doesn't affect distribution of $X_j$ \pause
+- **Identically distributed**: distribution of $X_i$ is the same for all $i$ \pause
+  - $\mathbb{E}(X_1) = \mathbb{E}(X_2) = ... = \mathbb{E}(X_n) = \mu$ \pause
+  - $\mathbb{V}(X_1) = \mathbb{V}(X_2) = ... = \mathbb{V}(X_n) = \sigma^2$
+  
+---
+
+# Distribution of the sample mean
+
+- **Sample mean** of i.i.d. random variables: \pause
+
+$$
+\bar{X}_n = \frac{X_1 + X_2 + ... + X_n}{n}
+$$
+
+ \pause
+ 
+- $\bar{X}_n$ is a random variable, what is its distibution? \pause
+  - What is the expectation of this distribution, $\mathbb{E}[\bar{X}_n]$  \pause
+  - What is the variance of this distribution, $\mathbb{V}[\bar{X}_n]$ 
+
+---
+
+# Properties of the sample mean
+
+ \pause
+ 
+\begin{definition}[Mean and variance of the sample mean]
+Suppose that $X_1, ..., X_n$ are i.i.d. r.v.s with $\mathbb{E}[{X}_i] = \mu$ and $\mathbb{V}[{X}_i] = \sigma^2$
+$$
+\mathbb{E}[\bar{X}_n] = \mu \qquad \qquad \mathbb{V}[\bar{X}_n] = \frac{\sigma^2}{n}
+$$
+\end{definition}
+
+ \pause
+ 
+- Key insights: \pause
+  - Sample mean is on average equal to the population mean \pause
+  - Variance of $\bar{X}_n$ depends on the population variance of $X_i$ and the sample size \pause
+- Standard deviation of the sample mean is called its **standard error**:
+
+$$
+SE = \sqrt{\mathbb{V}[\bar{X}_n]} = \frac{\sigma}{\sqrt{n}}
+$$
+
+
+---
+
+# Final probability lesson! Large Sample Theorems and the Normal Distribution
+
+\pause 
+![](figs/trump_trade1.png){width=65%} 
+
+![](figs/trump_trade2.png){width=65%} 
+
+- Source: [https://www.cnn.com/2025/03/26/economy/trump-tariffs-trade-war-jobs-economy/index.html](https://www.cnn.com/2025/03/26/economy/trump-tariffs-trade-war-jobs-economy/index.html)
+
+---
+
+# Savings Data
+
+- See [https://www.piie.com/blogs/realtime-economics/2025/lets-stop-trade-deficit-blame-game](https://www.piie.com/blogs/realtime-economics/2025/lets-stop-trade-deficit-blame-game)
+- `savings.csv`: data on **all** countries domestic savings as a share of GDP (from World Development Indicators at the World Bank)
+
+--------------------------------------------------------------------------------
+ Name                 Description
+ -------------------- ----------------------------------------------------------
+ `cntry_cd`           3-character ISO code for country
+ 
+ `country`            country name
+
+ `year`               year
+
+ `save_gdp`           gross savings (the difference between disposable income and consumption) as a share of GDP
+
+---------------------------------------------------------------------------------
+
+---
+
+# Load savings data
+
+```{r}
+savings <- read_csv("../data/savings.csv")
+head(savings)
+```
+
+---
+
+# Large random samples
+
+- In real data, we will have a set of $n$ measurements on a variable:
+
+$$
+X_1, X_2, ..., X_n
+$$
+
+ \pause
+ 
+  - $X_1$ is the savings/gdp of the randomly selected country  \pause
+  - $X_2$ is the savings/gdp of the second randomly selected country, etc. \pause
+  
+- What are the properties of the sample mean of these measurements? \pause
+
+  - Expectation: $\mathbb{E}(\bar{X}) = \mathbb{E}[{X}] = \mu$ \pause
+  - Variance: $\mathbb{V}(\bar{X}) = \mathbb{V}({X_i})/n = \sigma^2_X/n$ \pause
+  - Valid for any sample size! \pause
+  
+- **Asymptotics**: what can we learn as $n$ gets big?
+  
+---
+
+# Law of large numbers
+
+ \pause
+ 
+\begin{definition}[Law of large numbers]
+Let $X_1, ..., X_n$ be i.i.d. r.v.s with mean $\mu$ and finite variance $\sigma^2$. Then, $\bar{X}_n$ converges to $\mu$ as $n$ gets large.
+\end{definition} \pause
+
+- Probability of $\bar{X}_n$ being "far away" from $\mu$ goes to 0 as $n$ gets big. \pause
+- The distribution of sample mean "collapses" to population mean. \pause
+- Can see this from the variance of $\bar{X}_n:\mathbb{V}[X]/n$
+
+---
+
+# Normal random variable
+
+```{r, echo=F, fig.width=3, fig.height=1.5}
+x <- seq(-4, 4, length.out = 100)
+y <- dnorm(x)
+ggplot(data.frame(x, y), aes(x, y)) +
+  labs(y="",x="x") +
+  geom_line(linewidth=1) + 
+  theme_minimal() + 
+  theme(
+    axis.title.y = element_blank(),    # Remove y-axis title
+    axis.text.x = element_blank(),     # Remove x-axis text
+    axis.text.y = element_blank(),     # Remove y-axis text
+    axis.ticks.y = element_blank(),    # Remove y-axis ticks
+    panel.grid = element_blank(),      # Remove gridlines
+    axis.line.x = element_line()       # Add x-axis line
+  )
+```
+
+- A **normal distribution** has a PDF that is the class "bell-shaped" curve. \pause
+  - Extremely ubiquitous in statistics. \pause
+  - An r.v. is more likely to be in the center, rather than the tails. \pause
+  
+- Three key properties of this PDF: \pause
+  - **Unimodal**: one peak at the mean. \pause
+  - **Symmetric** around the mean. \pause
+  - **Everywhere positive**: any real value can possibly occur.
+  
+---
+
+# Normal distribution
+
+```{r, echo=F, fig.width=3, fig.height=1.5}
+x <- seq(-4, 4, length.out = 100)
+y <- dnorm(x)
+ggplot(data.frame(x, y), aes(x, y)) +
+  labs(y="",x="x") +
+  geom_line(linewidth=1) + 
+  geom_segment(aes(x = 0, xend = 0, y = 0, yend = max(y)), linetype = "dashed", color = "black") +  # Vertical dashed line (mu)
+  geom_segment(aes(x = -1.2, xend = 1.2, y = max(y)/2, yend = max(y)/2), linetype = "dashed", color = "black") +  # Horizontal dashed line (sigma)
+  annotate("text", x = -.25, y = min(y)+0.02, label = expression(mu), color = "black", size = 5) +  # mu label
+  annotate("text", x = -.8, y = max(y)/2 + 0.02, label = expression(sigma^2), color = "black", size = 5) +  # sigma label
+  theme_minimal() + 
+  theme(
+    axis.title.y = element_blank(),    # Remove y-axis title
+    axis.text.x = element_blank(),     # Remove x-axis text
+    axis.text.y = element_blank(),     # Remove y-axis text
+    axis.ticks.y = element_blank(),    # Remove y-axis ticks
+    panel.grid = element_blank(),      # Remove gridlines
+    axis.line.x = element_line()       # Add x-axis line
+  )
+```
+
+- A normal distribution can be affected by two values: \pause
+  - **mean/expected value** usually written as $\mu$ \pause
+  - **variance** written as $\sigma^2$ (standard deviation is $\sigma$) \pause
+  - Written $X \sim N(\mu, \sigma^2)$ \pause
+- **Standard normal distribution**: mean 0 and standard deviation 1.
+
+---
+
+# Recentering and scaling the normal
+
+- How do transformations of a normal work? \pause
+- Let $X \sim N(\mu, \sigma^2)$ and $c$ be a constant. \pause
+- If $Z = X + C$, then $Z \sim N(\mu + c, \sigma^2)$ \pause
+- Intuition: adding a constant to a normal shifts the distribution by that constant. \pause
+
+```{r, echo=F, fig.width=3, fig.height=1.5}
+x <- seq(-4, 4, length.out = 100)
+y <- dnorm(x)
+y_shifted <- dnorm(x - 1)  # Second normal distribution, shifted by mu + 1
+ggplot() +
+  labs(y="", x="x") +
+  geom_line(aes(x = x, y = y), linewidth = 1) +  # First normal distribution
+  geom_line(aes(x = x, y = y_shifted), linewidth = 1, color = "blue") +  # Second normal distribution (shifted)
+  geom_segment(aes(x = 0, xend = 0, y = 0, yend = max(y)), linetype = "dashed", color = "black") +  # Vertical dashed line (mu)
+  annotate("text", x = -.25, y = min(y) + 0.02, label = expression(mu), color = "black", size = 5) +  # mu label
+  geom_segment(aes(x = 1, xend = 1, y = 0, yend = max(y_shifted)), linetype = "dashed", color = "blue") +  # Vertical dashed line (mu + 1)
+  annotate("text", x = 1.5, y = min(y_shifted) + 0.02, label = expression(mu + 1), color = "blue", size = 5) +  # mu + 1 label
+  theme_minimal() + 
+  theme(
+    axis.title.y = element_blank(),    # Remove y-axis title
+    axis.text.x = element_blank(),     # Remove x-axis text
+    axis.text.y = element_blank(),     # Remove y-axis text
+    axis.ticks.y = element_blank(),    # Remove y-axis ticks
+    panel.grid = element_blank(),      # Remove gridlines
+    axis.line.x = element_line()       # Add x-axis line
+  )
+```
+
+
+---
+
+# Recentering and scaling the normal
+
+- Let $X \sim N(\mu, \sigma^2)$ and $c$ be a constant \pause
+- If $Z = cX$, then $Z \sim N(c\mu, (c\sigma)^2)$ \pause
+- Intuition: multiplying a normal by a constant scales the mean and the variance.
+
+
+```{r, echo=F, fig.width=3, fig.height=1.5}
+x <- seq(-6, 10, length.out = 100)  # Extend x range further
+y <- dnorm(x)
+y_shifted <- dnorm(x, mean = 2, sd = 2)  # Second normal distribution with mu = 2 and sigma = 2
+
+ggplot() +
+  labs(y="", x="x") +
+  geom_line(aes(x = x, y = y), linewidth = 1) +  # First normal distribution
+  geom_line(aes(x = x, y = y_shifted), linewidth = 1, color = "blue") +  # Second normal distribution (shifted)
+  geom_segment(aes(x = 0, xend = 0, y = 0, yend = max(y)), linetype = "dashed", color = "black") +  # Vertical dashed line (mu)
+  annotate("text", x = -.25, y = min(y) + 0.02, label = expression(mu), color = "black", size = 5) +  # mu label
+  geom_segment(aes(x = 2, xend = 2, y = 0, yend = max(y_shifted)), linetype = "dashed", color = "blue") +  # Vertical dashed line (mu * 2)
+  annotate("text", x = 1.5, y = min(y_shifted) + 0.02, label = expression(mu*2), color = "blue", size = 5) +  # mu * 2 label
+  scale_x_continuous(limits = c(-4, 8)) +
+  theme_minimal() + 
+  theme(
+    axis.title.y = element_blank(),    # Remove y-axis title
+    axis.text.x = element_blank(),     # Remove x-axis text
+    axis.text.y = element_blank(),     # Remove y-axis text
+    axis.ticks.y = element_blank(),    # Remove y-axis ticks
+    panel.grid = element_blank(),      # Remove gridlines
+    axis.line.x = element_line()       # Add x-axis line
+  )
+```
+
+---
+
+# Z-scores of normals
+
+- These facts imply the **z-score** of a normal variable is a standard normal: \pause
+
+$$
+z = \frac{X-\mu}{\sigma} \sim N(0,1)
+$$
+
+- Subtract the mean and divide by the SD $\rightsquigarrow$ standard normal \pause
+- z-score measures how many SDs away from the mean a value of $X$ is.
+
+---
+
+# Central limit theorem
+
+\begin{definition}[Central limit theorem]
+Let $X_1,...,X_n$ be i.i.d. r.v.s from a distribution with mean $\mu$ and variance $\sigma^2$. Then, $\bar{X}_n$ will be approximately distributed $N(\mu,\sigma^2/n)$ in large samples.
+\end{definition}
+
+ \pause
+- "Sample means tend to be normally distributed as samples get large." \pause
+- $\rightsquigarrow$ we know (an approx. of) the entire probability distribution of $\bar{X}_n$ \pause
+- Approximation is better as $n$ goes up. \pause
+- Does not depend on the distribution of $X_i$!
+  
+---
+
+# CLT simulation
+
+1. Draw a sample size of 1,000 from the savings data
+2. Calculate the sample mean of `save_gdp` for that sample
+3. Save the sample mean
+4. Repeat steps 1-3 a large number of times.
+
+---
+
+# Histogram of sample means
+
+```{r,echo=FALSE, fig.height=3, fig.width=4}
+set.seed(123)  
+sample_size <- 1000  # Sample size of 1000
+num_simulations <- 500  # Number of repetitions (500 times)
+sample_means <- numeric(num_simulations) # Initialize a vector to store sample means
+savings <- savings %>%
+  na.omit()
+for (i in 1:num_simulations) {
+  sample_data <- sample(savings$save_gdp, size = sample_size, replace = TRUE)
+  sample_means[i] <- mean(sample_data, na.rm=T)
+}
+
+# Plot the histogram of the sample means
+ggplot(data.frame(sample_means), aes(x = sample_means)) +
+  geom_histogram(aes(y = ..density..),binwidth = 0.3, color = "black", fill = "grey") +
+  scale_y_continuous(limits = c(0,.8)) +
+  labs(title = "",
+       x = "Sample Means",
+       y = "Density") +
+  theme_minimal()
+```  
+
+---
+
+# Histogram of sample means
+
+
+```{r,echo=FALSE, fig.height=3, fig.width=4}
+set.seed(123)  
+sample_size <- 1000  # Sample size of 1000
+num_simulations <- 500  # Number of repetitions (500 times)
+sample_means <- numeric(num_simulations) # Initialize a vector to store sample means
+savings <- savings %>%
+  na.omit()
+for (i in 1:num_simulations) {
+  sample_data <- sample(savings$save_gdp, size = sample_size, replace = TRUE)
+  sample_means[i] <- mean(sample_data, na.rm=T)
+}
+population_mean <- mean(savings$save_gdp)
+# Plot the histogram of the sample means
+ggplot(data.frame(sample_means), aes(x = sample_means)) +
+  geom_histogram(aes(y = ..density..),binwidth = 0.3, color = "black", fill = "grey") +
+  geom_vline(aes(xintercept = population_mean), color = "red", linetype = "solid", size = 1) +  # Vertical line at population mean
+  annotate("text", x = population_mean + 0.8, y = 0.75, label = "Population mean", color = "red", size = 5) +  # Label for population mean
+    scale_y_continuous(limits = c(0,.8)) +
+  labs(title = "",
+       x = "Sample Means",
+       y = "Density") +
+  theme_minimal()
+```  
+
+
+
+---
+
+# Histogram of sample means
+
+```{r,echo=FALSE, fig.height=3, fig.width=4}
+set.seed(123)  
+sample_size <- 1000  # Sample size of 1000
+num_simulations <- 500  # Number of repetitions (500 times)
+sample_means <- numeric(num_simulations) # Initialize a vector to store sample means
+savings <- savings %>%
+  na.omit()
+for (i in 1:num_simulations) {
+  sample_data <- sample(savings$save_gdp, size = sample_size, replace = TRUE)
+  sample_means[i] <- mean(sample_data, na.rm=T)
+}
+population_mean <- mean(savings$save_gdp)
+population_sd <- sd(savings$save_gdp)
+standard_error <- population_sd / sqrt(sample_size)
+
+# Plot the histogram of the sample means
+ggplot(data.frame(sample_means), aes(x = sample_means)) +
+  geom_histogram(aes(y = ..density..),binwidth = 0.3, color = "black", fill = "grey") +
+  geom_vline(aes(xintercept = population_mean), color = "red", linetype = "solid", size = 1) +  # Vertical line at population mean
+stat_function(fun = dnorm, args = list(mean = population_mean, sd = standard_error), color = "red", size = 1) +
+  annotate("text", x = population_mean + 0.8, y = 0.75, label = "Population mean", color = "red", size = 5) +  # Label for population mean
+    annotate("text", x = 20.5, y = 0.5, label = "CLT approximation", color = "red", size = 4) +  # Label for population mean
+    scale_y_continuous(limits = c(0,.8)) +
+  labs(title = "",
+       x = "Sample Means",
+       y = "Density") +
+  theme_minimal()
+```  
+
+
+---
+
+# Empirical rule for the normal distribution
+
+```{r, echo=F, fig.width=4, fig.height=1.75}
+mu <- 0  # Mean (mu)
+sigma <- 1  # Standard deviation (sigma)
+x <- seq(mu - 4*sigma, mu + 4*sigma, length.out = 100)  # Range of x values for the normal curve
+y <- dnorm(x, mean = mu, sd = sigma)  # Normal distribution density function
+
+# Create the plot
+ggplot(data.frame(x, y), aes(x, y)) +
+  geom_line(size = 1) +  # Normal distribution curve
+  scale_x_continuous(
+    breaks = c(mu - 3*sigma, mu - 2*sigma, mu - sigma, mu, mu + sigma, mu + 2*sigma, mu + 3*sigma), 
+    labels = c(expression(mu - 3 * sigma), expression(mu - 2 * sigma), expression(mu - sigma), 
+               expression(mu), expression(mu + sigma), expression(mu + 2 * sigma), expression(mu + 3 * sigma))
+  ) +  # Set x-axis labels at desired positions
+  labs(x = "", y = "") +  # Label for x-axis, remove label for y-axis
+  theme_minimal() +  # Minimal theme
+  theme(
+    axis.title.y = element_blank(),    # Remove y-axis title
+    axis.text.y = element_blank(),     # Remove y-axis text
+    axis.ticks.y = element_blank(),    # Remove y-axis ticks
+    panel.grid = element_blank(),      # Remove gridlines
+    axis.line.x = element_line(),
+    axis.ticks.x = element_line()   # Add x-axis line
+  )
+```
+
+- If $X \sim N(\mu, \sigma^2)$, then:
+
+---
+
+# Empirical rule for the normal distribution
+
+
+```{r, echo=F, fig.width=4, fig.height=1.75}
+mu <- 0  # Mean (mu)
+sigma <- 1  # Standard deviation (sigma)
+x <- seq(mu - 4*sigma, mu + 4*sigma, length.out = 100)  # Range of x values for the normal curve
+y <- dnorm(x, mean = mu, sd = sigma)  # Normal distribution density function
+
+# Create the plot
+ggplot(data.frame(x, y), aes(x, y)) +
+  geom_line(size = 1) +  # Normal distribution curve
+  scale_x_continuous(
+    breaks = c(mu - 3*sigma, mu - 2*sigma, mu - sigma, mu, mu + sigma, mu + 2*sigma, mu + 3*sigma), 
+    labels = c(expression(mu - 3 * sigma), expression(mu - 2 * sigma), expression(mu - sigma), 
+               expression(mu), expression(mu + sigma), expression(mu + 2 * sigma), expression(mu + 3 * sigma))
+  ) +  # Set x-axis labels at desired positions
+  labs(x = "", y = "") +  # Label for x-axis, remove label for y-axis
+  theme_minimal() +  # Minimal theme
+  theme(
+    axis.title.y = element_blank(),    # Remove y-axis title
+    axis.text.y = element_blank(),     # Remove y-axis text
+    axis.ticks.y = element_blank(),    # Remove y-axis ticks
+    panel.grid = element_blank(),      # Remove gridlines
+    axis.line.x = element_line(),
+    axis.ticks.x = element_line()   # Add x-axis line
+  ) +
+  geom_area(data = subset(data.frame(x, y), x >= mu - sigma & x <= mu + sigma), 
+            aes(x = x, y = y), fill = "black", alpha = 0.5) +
+  annotate("text", x = mu, y = 0.25, label = "0.68", color = "white", size = 6, fontface = "bold")
+```
+
+- If $X \sim N(\mu, \sigma^2)$, then:
+  - $\approx$ 68% of the distribution of $X$ is within 1 SD of the mean.
+
+---
+
+# Empirical rule for the normal distribution
+
+```{r, echo=F, fig.width=4, fig.height=1.75}
+mu <- 0  # Mean (mu)
+sigma <- 1  # Standard deviation (sigma)
+x <- seq(mu - 4*sigma, mu + 4*sigma, length.out = 100)  # Range of x values for the normal curve
+y <- dnorm(x, mean = mu, sd = sigma)  # Normal distribution density function
+
+# Create the plot
+ggplot(data.frame(x, y), aes(x, y)) +
+  geom_line(size = 1) +  # Normal distribution curve
+  scale_x_continuous(
+    breaks = c(mu - 3*sigma, mu - 2*sigma, mu - sigma, mu, mu + sigma, mu + 2*sigma, mu + 3*sigma), 
+    labels = c(expression(mu - 3 * sigma), expression(mu - 2 * sigma), expression(mu - sigma), 
+               expression(mu), expression(mu + sigma), expression(mu + 2 * sigma), expression(mu + 3 * sigma))
+  ) +  # Set x-axis labels at desired positions
+  labs(x = "", y = "") +  # Label for x-axis, remove label for y-axis
+  theme_minimal() +  # Minimal theme
+  theme(
+    axis.title.y = element_blank(),    # Remove y-axis title
+    axis.text.y = element_blank(),     # Remove y-axis text
+    axis.ticks.y = element_blank(),    # Remove y-axis ticks
+    panel.grid = element_blank(),      # Remove gridlines
+    axis.line.x = element_line(),
+    axis.ticks.x = element_line()   # Add x-axis line
+  ) +
+  geom_area(data = subset(data.frame(x, y), x >= mu - 2*sigma & x <= mu + 2*sigma), 
+            aes(x = x, y = y), fill = "black", alpha = 0.5) +
+  annotate("text", x = mu, y = 0.25, label = "0.95", color = "white", size = 6, fontface = "bold")
+```
+
+- If $X \sim N(\mu, \sigma^2)$, then:
+  - $\approx$ 68% of the distribution of $X$ is within 1 SD of the mean.
+  - $\approx$ 95% of the distribution of $X$ is within 2 SD of the mean.
+
+---
+
+# Empirical rule for the normal distribution
+
+```{r, echo=F, fig.width=4, fig.height=1.75}
+mu <- 0  # Mean (mu)
+sigma <- 1  # Standard deviation (sigma)
+x <- seq(mu - 4*sigma, mu + 4*sigma, length.out = 100)  # Range of x values for the normal curve
+y <- dnorm(x, mean = mu, sd = sigma)  # Normal distribution density function
+
+# Create the plot
+ggplot(data.frame(x, y), aes(x, y)) +
+  geom_line(size = 1) +  # Normal distribution curve
+  scale_x_continuous(
+    breaks = c(mu - 3*sigma, mu - 2*sigma, mu - sigma, mu, mu + sigma, mu + 2*sigma, mu + 3*sigma), 
+    labels = c(expression(mu - 3 * sigma), expression(mu - 2 * sigma), expression(mu - sigma), 
+               expression(mu), expression(mu + sigma), expression(mu + 2 * sigma), expression(mu + 3 * sigma))
+  ) +  # Set x-axis labels at desired positions
+  labs(x = "", y = "") +  # Label for x-axis, remove label for y-axis
+  theme_minimal() +  # Minimal theme
+  theme(
+    axis.title.y = element_blank(),    # Remove y-axis title
+    axis.text.y = element_blank(),     # Remove y-axis text
+    axis.ticks.y = element_blank(),    # Remove y-axis ticks
+    panel.grid = element_blank(),      # Remove gridlines
+    axis.line.x = element_line(),
+    axis.ticks.x = element_line()   # Add x-axis line
+  ) +
+  geom_area(data = subset(data.frame(x, y), x >= mu - 3*sigma & x <= mu + 3*sigma), 
+            aes(x = x, y = y), fill = "black", alpha = 0.5) +
+  annotate("text", x = mu, y = 0.25, label = ".997", color = "white", size = 6, fontface = "bold")
+```
+
+- If $X \sim N(\mu, \sigma^2)$, then:
+  - $\approx$ 68% of the distribution of $X$ is within 1 SD of the mean.
+  - $\approx$ 95% of the distribution of $X$ is within 2 SD of the mean.
+  - $\approx$ 99.7% of the distribution of $X$ is within 3 SD of the mean.
+
+---
+
+# Why the CLT?
+
+- Why do we care about CLT? \pause
+  - We usually only sample once, so we'll only get 1 sample mean \pause
+  - Implies our 1 sample mean won't be too far from population mean. \pause
+  
+- By CLT, sample mean $\approx$ normal with mean $\mu$ and SD $\frac{\sigma}{\sqrt{n}}$ \pause
+- By empirical rule, sample mean will be... \pause
+  - Between $\mu - 2 \times \frac{\sigma}{\sqrt{n}}$ and $\mu + 2 \times \frac{\sigma}{\sqrt{n}}$ 95% of the time \pause
+- This will also help us create measure of uncertainty for our estimates

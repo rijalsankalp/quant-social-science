@@ -1,0 +1,17 @@
+
+{{ $file := .Page.Resources.GetMatch (.Get "file") }}
+
+{{ if $file }}
+  <div class="pdf-container" style="position: relative; padding-bottom: 75%; height: 0; overflow: hidden; border: 1px solid #ddd;">
+    <iframe src="{{ $file.RelPermalink }}" 
+            style="position: absolute; top:0; left: 0; width: 100%; height: 100%;" 
+            frameborder="0" 
+            allowfullscreen>
+    </iframe>
+  </div>
+  <p style="text-align: center; font-size: 0.9em; margin-top: 8px;">
+    Can't see the PDF? <a href="{{ $file.RelPermalink }}" target="_blank">Download it directly</a>.
+  </p>
+{{ else }}
+  {{ errorf "PDF not found for shortcode: %s. Ensure the file is in the same folder as your index.md/Rmd." (.Get "file") }}
+{{ end }}

@@ -1,0 +1,157 @@
+---
+title: "Analysis of the 1933 German Election during the Weimar Republic"
+# subtitle: ""
+
+author: "Prof. Ryan Weldzius"
+institute: "Villanova University"
+
+date: 2025-04-09
+Due_Date: "2025-04-16 by 11:59PM ET"
+
+type: exams
+
+header-includes:
+  - \usepackage{fancyhdr}
+  - \pagestyle{fancy}
+  - \fancypagestyle{plain}{\pagestyle{fancy}}
+  - \fancyhead[L]{}
+  - \fancyhead[C]{This material should not be shared beyond those who are enrolled in this class}
+---
+
+
+
+
+
+
+
+
+<p>Who voted for the Nazis? Researchers have attempted to answer this question by analyzing aggregate election data from the 1933 German election during the Weimar Republic. This exercise is based on the following article: Gary King, Ori Rosen, Martin Tanner, and Alexander F. Wagner (2008) “Ordinary Economic Voting Behavior in the Extraordinary Election of Adolf Hitler.” <em>Journal of Economic History</em> vol. 68, no. 4, pp. 951-996.</p>
+<p>We analyze a simplified version of the election outcome data, which records, for each precinct, the number of eligible voters as well as the number of votes for the Nazi party. In addition, the data set contains the aggregate occupation statistics for each precinct. The table below presents the variable names and descriptions of the data file <code>nazis.csv</code>. Each observation represents a German precinct.</p>
+<table style="width:99%;">
+<colgroup>
+<col width="25%" />
+<col width="73%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Name</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left"><code>shareself</code></td>
+<td align="left">Proportion of self-employed potential voters</td>
+</tr>
+<tr class="even">
+<td align="left"><code>shareblue</code></td>
+<td align="left">Proportion of blue-collar potential voters</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>sharewhite</code></td>
+<td align="left">Proportion of white-collar potential voters</td>
+</tr>
+<tr class="even">
+<td align="left"><code>sharedomestic</code></td>
+<td align="left">Proportion of domestically employed potential voters</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>shareunemployed</code></td>
+<td align="left">Proportion of unemployed potential voters</td>
+</tr>
+<tr class="even">
+<td align="left"><code>nvoter</code></td>
+<td align="left">Number of eligible voters</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>nazivote</code></td>
+<td align="left">Number of votes for Nazis</td>
+</tr>
+</tbody>
+</table>
+<p>The goal of analysis is to investigate which types of voters (based on their occupation category) cast ballots for the Nazis. One hypothesis says that the Nazis received much support from blue-collar workers. Since the data do not directly tell us how many blue-collar workers voted for the Nazis, we must infer this information using a statistical analysis with certain assumptions. Such an analysis where researchers try to infer individual behaviors from aggregate data is called <em>ecological inference</em>.</p>
+<p>To think about ecological inference more carefully in this context, consider the following simplified table for each precinct <span class="math inline">\(i\)</span>:</p>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Vote-Choice</th>
+<th align="left">Blue-Collar</th>
+<th align="left">Non-blue-collar</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Nazis</td>
+<td align="left"><span class="math inline">\(W_{i1}\)</span></td>
+<td align="left"><span class="math inline">\(W_{i2}\)</span></td>
+<td><span class="math inline">\(Y_i\)</span></td>
+</tr>
+<tr class="even">
+<td align="left">Other parties or abstention</td>
+<td align="left"><span class="math inline">\(1-W_{i1}\)</span></td>
+<td align="left"><span class="math inline">\(1-W_{i2}\)</span></td>
+<td><span class="math inline">\(1-Y_i\)</span></td>
+</tr>
+<tr class="odd">
+<td align="left"></td>
+<td align="left"><span class="math inline">\(X_i\)</span></td>
+<td align="left"><span class="math inline">\(1-X_i\)</span></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>The data at hand only tells us the proportion of blue-collar voters <span class="math inline">\(X_i\)</span> and the vote share for the Nazis <span class="math inline">\(Y_i\)</span> in each precinct, but we would like to know the Nazi vote share among the blue-collar voters <span class="math inline">\(W_{i1}\)</span> and among the non-blue-collar voters <span class="math inline">\(W_{i2}\)</span>. Then, there is a deterministic relationship between <span class="math inline">\(X\)</span>, <span class="math inline">\(Y\)</span>, and <span class="math inline">\(W_1, W_2\)</span>. Indeed, for each precinct <span class="math inline">\(i\)</span>, we can express the overall Nazis’ vote share as the weighted average of the Nazis’ vote share of each occupation:</p>
+<p><span class="math display">\[
+  Y_i = X_i W_{i1} + (1-X_i) W_{i2}
+\]</span>
+## Question 1 (5 points)</p>
+<p>We exploit the linear relationship between the Nazis’ vote share <span class="math inline">\(Y_i\)</span> and the proportion of blue-collar voters <span class="math inline">\(X_i\)</span> given in the equation above by regressing the former on the latter. That is, fit the following linear regression model:</p>
+<p><span class="math display">\[
+    E(Y_i | X_i) = \alpha + \beta X_i
+  \]</span></p>
+<p>Compute the estimated slope coefficient, its standard error, and the 95% confidence interval. Give a substantive interpretation of each quantity.</p>
+<div id="answer-1" class="section level2">
+<h2>Answer 1</h2>
+<pre class="r"><code># Load packages you might need
+library(&quot;tidyverse&quot;)
+library(&quot;broom&quot;)
+library(&quot;modelr&quot;)</code></pre>
+<p>Write answer here.</p>
+</div>
+<div id="question-2-5-points" class="section level2">
+<h2>Question 2 (5 points)</h2>
+<p>Based on the fitted regression model from the previous question, predict the average Nazi vote share <span class="math inline">\(Y_i\)</span> given various proportions of blue-collar voters <span class="math inline">\(X_i\)</span>. Specifically, plot the predicted value of <span class="math inline">\(Y_i\)</span> (the vertical axis) against various values of <span class="math inline">\(X_i\)</span> within its observed range (the horizontal axis) as a solid line. Add 95% confidence intervals as dashed lines or shaded areas. Give a substantive interpretation of the plot.</p>
+</div>
+<div id="answer-2" class="section level2">
+<h2>Answer 2</h2>
+<p>Write answer here.</p>
+</div>
+<div id="question-3-5-points" class="section level2">
+<h2>Question 3 (5 points)</h2>
+<p>Fit the following alternative linear regression model,</p>
+<p><span class="math display">\[
+    E(Y_i | X_i) = \alpha^\ast X_i + (1-X_i) \beta^\ast
+  \]</span>
+Note that this model does not have an intercept. How should one interpret <span class="math inline">\(\alpha^\ast\)</span> and <span class="math inline">\(\beta^\ast\)</span>? How are these parameters related to the linear regression model given in Question 1?</p>
+</div>
+<div id="answer-3-5-points" class="section level2">
+<h2>Answer 3 (5 points)</h2>
+<p>Write answer here.</p>
+</div>
+<div id="question-4-5-points" class="section level2">
+<h2>Question 4 (5 points)</h2>
+<p>Fit a linear regression model where the overall Nazi vote share is regressed on the proportion of each occupation. The model should contain no intercept and five predictors, each representing the proportion of a certain occupation type. Interpret the estimate of each coefficient and its 95% confidence interval. What assumption is necessary to permit your interpretation?</p>
+</div>
+<div id="answer-4" class="section level2">
+<h2>Answer 4</h2>
+<p>Write answer here.</p>
+</div>
+<div id="question-5-extra-credit-3-points" class="section level2">
+<h2>Question 5 (Extra credit: 3 points)</h2>
+<p>Finally, we consider a model-free approach to ecological inference. That is, we ask how much we can learn from the data alone without making an additional modeling assumption. For each precinct, obtain the smallest value that is logically possible for <span class="math inline">\(W_{i1}\)</span> by considering the scenario in which all non-blue-collar voters in precinct <span class="math inline">\(i\)</span> vote for the Nazis. Express this value as a function of <span class="math inline">\(X_i\)</span> and <span class="math inline">\(Y_i\)</span>. Similarly, what is the largest possible value for <span class="math inline">\(W_{i1}\)</span>? Calculate these bounds, keeping in mind that the value for <span class="math inline">\(W_{i1}\)</span> cannot be negative or greater than 1. Finally, compute the bounds for the nation-wide proportion of blue-collar voters who voted for the Nazis (i.e., combining the blue-collar voters from all precincts by computing their weighted average based on the number of blue-collar voters). Give a brief substantive interpretation of the results.</p>
+</div>
+<div id="answer-5" class="section level2">
+<h2>Answer 5</h2>
+<p>Write answer here.</p>
+</div>

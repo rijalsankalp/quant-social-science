@@ -1,0 +1,461 @@
+---
+title: "Probability: The Foundation of Uncertainty"
+subtitle: "PSC4375: Week 9"
+author: "Prof. Weldzius"
+institute: "Villanova University"
+date: "Slides Updated: `r Sys.Date()`"
+output:
+  beamer_presentation:
+    theme: "CambridgeUS"
+    colortheme: "seahorse"
+    fonttheme: "structurebold"
+header-includes:
+  - \usepackage{tikz}
+  - \usepackage{graphicx} 
+  - \usepackage{amssymb}
+  - \usepackage{fontenc}
+  - \usepackage{xcolor}    
+  - \usepackage{array}
+classoption: "handout"
+---
+
+```{css,echo = F}
+.small .remark-code { /*Change made here*/
+  font-size: 85% !important;
+}
+.tiny .remark-code { /*Change made here*/
+  font-size: 50% !important;
+}
+```
+
+```{r,include=F}
+set.seed(123)
+options(width=60)
+knitr::opts_chunk$set(fig.align='center',fig.width=9,fig.height=5,message=F,warning=F)
+def.chunk.hook  <- knitr::knit_hooks$get("chunk")
+knitr::knit_hooks$set(chunk = function(x, options) {
+  x <- def.chunk.hook(x, options)
+  ifelse(options$size != "normalsize", paste0("\n \\", options$size,"\n\n", x, "\n\n \\normalsize"), x)
+})
+library(tidyverse)
+library(tinytex)
+```
+
+# Learning about populations
+
+\begin{center}
+\begin{tikzpicture}[align=center]
+  \only<1-5>{\node[draw, circle, minimum size=3cm, align=center] (pop) at (0,0) {Population}; 
+  \node[draw, circle, minimum size=3cm, align=center] (sample) at (4,0) {Sample};} 
+  \only<2-5>{\draw[->, bend left=45, thick] (pop) to (sample); 
+  \node at (2, 1.7) {Probability};}
+  \only<3-5>{\draw[->, bend right=315, thick] (sample) to (pop);
+  \node at (2, -1.7) {Inference};}
+\end{tikzpicture}
+\end{center}
+
+\only<4-5>{\textbf{Probability}: formalize the uncertainty about how our data came to be} \vspace{3pt}
+\only<5-5>{ \textbf{Inference}: learning about the population from a sample of data}
+  
+---
+
+# Why probability?
+
+\pause
+
+  - Probability quantifies chance variation or uncertainty in outcomes.\pause
+    - It might rain or be sunny today, we don’t know which.\pause
+  - We estimated a treatment effect of 7.2, but what if we reran history?\pause
+    - Weather changes $\rightsquigarrow$ slightly different estimated effect.\pause
+  - Statistical inference is a **thought experiment** about uncertainty.\pause
+    - Imagine a world where the treatment effect were 0 in the population.\pause
+    - What types of estimated effects would we see in this world by chance?\pause
+  - Probability to the rescue!
+  
+---
+
+# Sample spaces & events
+
+\pause 
+
+  - To formalize chance, we need to define the set of possible outcomes.\pause 
+  - **Sample space**: $\Omega$ the set of possible outcomes.\pause 
+  - **Event**: any subset of outcomes in the sample space
+  
+---
+
+# Example: gambling
+
+\pause 
+  - A standard deck of playing cards has 52 cards: \pause 
+    - 13 rank cards: (2,3,4,5,6,7,8,9,10,J,Q,K,A) \pause 
+    - in each of 4 suits: ($\clubsuit$,$\spadesuit$,$\textcolor{red}{\heartsuit}$,$\textcolor{red}{\diamondsuit}$) \pause 
+  - Hypothetical trial: pick a card, any card. \pause 
+    - Uncertainty: we don’t know which card we’re going to get. \pause 
+  - One possible outcome: picking a $4\clubsuit$ \pause 
+  - Sample space: \vspace{-5pt}
+
+\[  
+\begin{array}{ccccccccccccc}
+2\clubsuit & 3\clubsuit & 4\clubsuit & 5\clubsuit & 6\clubsuit & 7\clubsuit & 8\clubsuit & 9\clubsuit & 10\clubsuit & J\clubsuit & Q\clubsuit & K\clubsuit & A\clubsuit \\
+2\spadesuit & 3\spadesuit & 4\spadesuit & 5\spadesuit & 6\spadesuit & 7\spadesuit & 8\spadesuit & 9\spadesuit & 10\spadesuit & J\spadesuit & Q\spadesuit & K\spadesuit & A\spadesuit \\
+2\textcolor{red}{\heartsuit} & 3\textcolor{red}{\heartsuit} & 4\textcolor{red}{\heartsuit} & 5\textcolor{red}{\heartsuit} & 6\textcolor{red}{\heartsuit} & 7\textcolor{red}{\heartsuit} & 8\textcolor{red}{\heartsuit} & 9\textcolor{red}{\heartsuit} & 10\textcolor{red}{\heartsuit} & J\textcolor{red}{\heartsuit} & Q\textcolor{red}{\heartsuit} & K\textcolor{red}{\heartsuit} & A\textcolor{red}{\heartsuit} \\
+2\textcolor{red}{\diamondsuit} & 3\textcolor{red}{\diamondsuit} & 4\textcolor{red}{\diamondsuit} & 5\textcolor{red}{\diamondsuit} & 6\textcolor{red}{\diamondsuit} & 7\textcolor{red}{\diamondsuit} & 8\textcolor{red}{\diamondsuit} & 9\textcolor{red}{\diamondsuit} & 10\textcolor{red}{\diamondsuit} & J\textcolor{red}{\diamondsuit} & Q\textcolor{red}{\diamondsuit} & K\textcolor{red}{\diamondsuit} & A\textcolor{red}{\diamondsuit} \\
+\end{array}  
+\]
+
+  - An event: picking a Queen, {Q$\clubsuit$,Q$\spadesuit$,Q$\textcolor{red}{\heartsuit}$,Q$\textcolor{red}{\diamondsuit}$}
+  
+---
+
+# What is probability?
+
+\pause
+
+  - The probability  \( \mathbb{P}(A) \) represents how likely event $A$ occurs. \pause
+  - If **all outcomes equally likely**, then:
+  
+$$
+\mathbb{P}(A) = \frac{\text{number of elements in } A}{\text{number of elements in }\Omega}
+$$
+
+\pause 
+
+  - Example: randomly draw 1 card: \pause 
+    - probability of drawing 4$\clubsuit$: \pause $\frac{1}{52}$ \pause
+    - probability of drawing any $\clubsuit$: \pause $\frac{13}{52}$ \pause
+    
+  - Same math, but different interpretations: \pause
+    - **Frequentist**: \( \mathbb{P}() \) reflects relative frequency in a large number of trials. \pause 
+    - **Bayesian**: \( \mathbb{P}() \) are subjective beliefs about outcomes. \pause
+    
+  - Not our fight $\rightsquigarrow$ stick to frequentism in this class
+  
+---
+
+# Probability axioms
+
+  - Probability quantifies how likely or unlikely events are. \pause
+  - We'll define the probability \( \mathbb{P}(A) \) with three axioms:  \pause
+  
+  1. (Nonnegativity) \( \mathbb{P}(A) \) $\geq 0$ for every event $A$  \pause
+  2. (Normalization) \( \mathbb{P}(\Omega) \) $= 1$   \pause
+  3. (Addition Rule) If two events $A$ and $B$ are mutually exclusive 
+  
+$$
+\mathbb{P}(A \text{ or } B) = \mathbb{P}(A) + \mathbb{P}(B).
+$$
+
+---
+
+# Gambling 102
+
+ \pause
+ 
+  - What is \( \mathbb{P}(\text{Q card}) \) if a single card is randomly selected from a deck? \pause
+    - "randomly selected" $\rightsquigarrow$ all cards have prob. 1/52 \pause
+  - "4 card" event = {Q$\clubsuit$ \pause or Q$\spadesuit$ \pause or Q$\textcolor{red}{\heartsuit}$ \pause or Q$\textcolor{red}{\diamondsuit}$} \pause
+  - Union of mutually exclusive events $\rightsquigarrow$  use addition rule \pause
+    - $\rightsquigarrow$ $\mathbb{P}(\text{Q card})$ $= \mathbb{P}(\text{Q}\clubsuit) +\mathbb{P}(\text{Q}\spadesuit) +\mathbb{P}(\textcolor{red}{\text{Q}\heartsuit}) +\mathbb{P}(\textcolor{red}{\text{Q}\diamondsuit})$ \pause $= \frac{4}{52}$
+
+---
+
+# Useful probability facts
+
+  - Probability of the complement: \pause \( \mathbb{P}(\text{not }A) = 1 - \mathbb{P}(A) \) \pause
+    - Probability of **not** drawing a Queen is $1 - \frac{4}{52} = \frac{48}{52}$ \pause 
+  - **General addition rule** for any events, $A$ and $B$: \vspace{-5pt}
+
+$$
+\mathbb{P}(A\text{ or }B) = \mathbb{P}(A) + \mathbb{P}(B) - \mathbb{P}(A\text{ and }B)
+$$
+
+\pause 
+
+   - Probability of drawing Queen or $\spadesuit$ \pause
+   - $\frac{4}{52} + \frac{13}{52} - \frac{1}{52} = \frac{16}{52}$
+  
+---
+
+# Conjunction fallacy
+
+*Linda is 31 years old, single, outspoken, and very bright. She majored in philosophy. As a student, she was deeply concerned with issues of discrimination and social justice, and also participated in anti-nuclear demonstrations.*
+
+\pause 
+
+  - What is more probable? \pause 
+  
+    1. Linda is a bank teller? 
+    2. Linda is a bank teller and is active in the feminist movement? \pause
+    
+  - Famous example of the **conjunction fallacy** called the Linda
+  problem \pause 
+    - Majority of respondents chose 2, but this is impossible! \pause 
+    
+  - **Law of total probability** for any events $A$ and $B$: \pause
+
+$$
+\mathbb{P}(A) = \mathbb{P}(A\text{ and }B) + \mathbb{P}(A\text{ and not }B)
+$$
+\pause
+
+\vspace{-20pt}
+
+$$
+\mathbb{P}(\text{teller and feminist}) = \mathbb{P}(\text{teller}) - \mathbb{P}(\text{teller and not feminist})
+$$
+
+---
+
+# Law of total probability
+
+\[
+\begin{array}{|c|c c c|c|}
+\hline
+ & Democrats & Republicans & Independents & Total \\
+\hline
+Men & 29 & 43 & 2 & 74 \\
+Women & 16 & 10 & 0 & 26 \\
+\hline
+Total & 45 & 53 & 2 & 100 \\
+\hline
+\end{array}
+\]
+
+\pause 
+
+  - What's the probability of randomly selecting a woman senator?
+  \pause
+  \vspace{-10pt}
+  
+$$
+\mathbb{P}(\text{woman}) = \mathbb{P}(\text{woman and a Democrat}) + \mathbb{P}(\text{woman and not a Democrat}) 
+$$
+
+\pause  \vspace{-10pt}
+
+$$
+= \frac{16}{100}+\frac{10}{100}=\frac{26}{100}
+$$
+
+---
+
+# Break time!
+
+---
+
+# Conditional probability
+
+  - If we know that $B$ has occurred, what is the probability of $A$?
+    - Conditioning our analysis on $B$ having occurred.
+  - Examples:
+    - Probability of two states going to war if they are both democracies?
+    - Probability of a judge issuing a pro-choice ruling if they have daughters?
+    - Probability of a coup in a country if it has a presidential system?
+  - Conditional probability extremely useful for data analysis.
+  
+---
+
+# Conditional probability definition
+
+\pause 
+
+  - Definition: if $\mathbb{P}(B)>0$ then the **conditional probability** of $A$ given $B$ is
+
+\pause 
+
+$$
+\mathbb{P}(A|B) = \frac{\mathbb{P}(A \text{ and } B)}{\mathbb{P}(B)}
+$$
+\pause 
+
+  - How often $A$ and $B$ occur divided by how often $B$ occurs. \pause
+  
+  - **WARNING!** $\mathbb{P}(A|B)$ does **not**, in general, equal $\mathbb{P}(B|A)$ \pause
+  
+    - $\mathbb{P}(\text{smart}|\text{in QSS})$ is high \pause
+    - $\mathbb{P}(\text{in QSS}|\text{smart})$ is low \pause
+    - There are many many smart people who are not in this class (tell your friends)
+    
+  - If all outcomes equally likely:
+  
+$$
+\mathbb{P}(A|B) = \frac{\text{number of outcomes in both } A \text{ and } B)}{\text{number of outcomes in just } B}
+$$
+  
+---
+
+# Conditional probability  
+
+\begin{center}
+\begin{tikzpicture}
+
+% Draw the left circle (B)
+\draw[fill=none, draw=black] (0, 0) circle(2);
+
+% Draw the right circle (A) with partial overlap
+\draw[fill=none, draw=black] (2, 0) circle(2);
+
+% Shade the overlapping area in purple
+\begin{scope}
+    \clip (0, 0) circle(2);
+    \fill[purple, opacity=0.4] (2, 0) circle(2);
+\end{scope}
+
+% Add the label "B" inside the left circle
+\node at (-0.6, 0) {\textbf{B}};
+
+% Add the label "A" inside the right circle
+\node at (2.6, 0) {\textbf{A}};
+
+% Add the label "P(B and A)" above the circles
+\node at (1, 2.5) {\textbf{P(B and A)}};
+
+\end{tikzpicture}
+\end{center}
+
+---
+
+\begin{center}
+\begin{tikzpicture}
+
+% Shade the left circle in blue
+\draw[fill=blue, opacity=0.4] (0, 0) circle(2);
+
+% Draw the right circle (A) with no fill
+\draw[fill=none, draw=black] (2, 0) circle(2);
+
+% Shade the overlapping area in purple
+\begin{scope}
+    \clip (0, 0) circle(2);  % Clip the left circle
+    \fill[purple, opacity=0.4] (2, 0) circle(2);  % Fill the overlap area
+\end{scope}
+
+% Add the label "B" inside the left circle
+\node at (-0.6, 0) {\textbf{B}};
+
+% Add the label "A" inside the right circle
+\node at (2.6, 0) {\textbf{A}};
+
+% Add the label "P(B|A)" above the circles
+\node at (1, 2.5) {\textbf{P(A|B)}};
+
+\end{tikzpicture}
+\end{center}
+
+---
+
+# US Senate example
+
+\[
+\begin{array}{|c|c c c|c|}
+\hline
+ & Democrats & Republicans & Independents & Total \\
+\hline
+Men & 29 & 43 & 2 & 74 \\
+Women & 16 & 10 & 0 & 26 \\
+\hline
+Total & 45 & 53 & 2 & 100 \\
+\hline
+\end{array}
+\]
+
+\pause
+
+  - Choose one senator at random from this population \pause
+  - What is the probability of choosing a woman? \pause
+    - $\mathbb{P}(\text{Woman}) = \frac{26}{100} = 0.26$ \pause \vspace{5pt}
+  - What is the probability of choosing a Republican who is a woman? \pause
+    - $\mathbb{P}(\text{Woman | Rep.}) = \frac{10/100}{53/100} \approx 0.19$ 
+    
+---
+
+# Conditional probability rules
+
+  - Multiplication rule:
+  
+$$
+\mathbb{P}(A\text{ and }B) = \mathbb{P}(A|B)\mathbb{P}(B) = \mathbb{P}(B|A)\mathbb{P}(A)
+$$
+
+---
+
+# Multiplication rule example
+
+\[
+\begin{array}{|c|c c c|c|}
+\hline
+ & Democrats & Republicans & Independents & Total \\
+\hline
+Men & 29 & 43 & 2 & 74 \\
+Women & 16 & 10 & 0 & 26 \\
+\hline
+Total & 45 & 53 & 2 & 100 \\
+\hline
+\end{array}
+\]
+
+  - Draw the names of two senators from a hat
+  - What's the probability that we draw two women? \pause
+  
+    - Let $W_1$ and $W_2$ be the events that 1st and 2nd draws are women \pause 
+    - We could make a list of all possible pairs to draw and count them... \pause
+    - Or we could just use the multiplication rule:
+    
+$$
+\mathbb{P}(W_1\text{ and }W_2) = \mathbb{P}(W_1)\mathbb{P}(W_2|W_1) 
+$$
+
+---
+
+# Law of total probability
+
+\begin{center}
+\begin{tikzpicture}
+\draw[fill=none] (0, 0) circle(2);
+\draw[fill=none] (-2.8, -2) rectangle (2.8, 2);
+\draw[black] (0, -2) -- (0, 2);
+\node at (-1.8, -1.5) {\textbf{$B$}};
+\node at (-.7, 0) {\textbf{$A$}};
+\node at (1.8, -1.5) {\textbf{$B^c$}};
+\node at (2.6, -1.8) {\textbf{$\Omega$}};
+\end{tikzpicture}
+\end{center}
+\vspace{-10pt}
+
+\pause 
+  - Conditional probability lets us restate the law of total probability
+
+\pause   
+  - **Law of total probability**:
+
+\pause 
+\vspace{-5pt}  
+\begin{align*}
+\mathbb{P}(A) & = \mathbb{P}(A \text{ and } B) + \mathbb{P}(A \text{ and not }B) \\  
+& = \mathbb{P}(A|B)\mathbb{P}(B) + \mathbb{P}(A |\text{ not }B)\mathbb{P}(\text{not }B)
+\end{align*}
+    
+---
+# Independence
+
+\pause 
+
+  - Two events are **independent** if one occurring has no bearing on the probability of the other occurring. \pause 
+    - Formally, $\mathbb{P}(A \text{ and }B) = \mathbb{P}(A)\mathbb{P}(B)$ \pause 
+  - If $A$ and $B$ are independent, then $\mathbb{P}(A |B) = \mathbb{P}(A)$ \pause
+    - Knowing $B$ occurred doesn't change the probability of A
+    
+---
+# Sampling and independence
+
+\pause 
+  - Sampling $>$ 1 with replacement: **independent draws** \pause 
+    - Randomly draw 1 senator, note the name, then put it back in the hat. \pause 
+    - Shuffle, randomly draw 2nd senator, note the senator. \pause
+    - First draw doesn't affect second $\rightsquigarrow$ independence \pause
+    
+  - Sampling $>$ 1 without replacement: **dependent draws** \pause 
+    - Randomly draw 1 senator, note the name, leave it out. \pause 
+    - Randomly draw 2nd senator from the remaining 99 senators. \pause
+    - First draw affects the probability of the second.

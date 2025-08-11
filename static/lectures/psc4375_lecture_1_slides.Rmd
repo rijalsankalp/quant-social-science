@@ -1,0 +1,179 @@
+---
+title: "PSC4375: Introduction to Causality"
+subtitle: "Week 1: Lecture 1"
+author: "Prof. Weldzius"
+institute: "Villanova University"
+date: "Slides Updated: `r Sys.Date()`"
+output:
+  beamer_presentation:
+    theme: "CambridgeUS"
+    colortheme: "seahorse"
+    fonttheme: "structurebold"
+---
+
+```{css,echo = F}
+.small .remark-code { /*Change made here*/
+  font-size: 85% !important;
+}
+.tiny .remark-code { /*Change made here*/
+  font-size: 50% !important;
+}
+```
+
+```{r,include=F}
+set.seed(123)
+options(width=60)
+knitr::opts_chunk$set(fig.align='center',fig.width=9,fig.height=5,message=F,warning=F)
+def.chunk.hook  <- knitr::knit_hooks$get("chunk")
+knitr::knit_hooks$set(chunk = function(x, options) {
+  x <- def.chunk.hook(x, options)
+  ifelse(options$size != "normalsize", paste0("\n \\", options$size,"\n\n", x, "\n\n \\normalsize"), x)
+})
+```
+
+# What is causal effect?
+
+**Factual** vs. **Counterfactual** \pause 
+
+  * Does the minimum wage increase the unemployment rate? \pause 
+
+    - Unemployment rate went up after the minimum wage increased \pause 
+    - Would it have gone up if the minimum wage increase not occurred? \pause 
+  
+  * Does having daughters affect a judge’s rulings in court? \pause 
+
+    - A judge with a daughter gave a pro-choice ruling.\pause 
+    - Would they have done that if they had a son instead? \pause 
+    
+  * Does race affect one's job prospect? \pause 
+  
+    - Jalen applied for a job but did not get it  \pause 
+    - Would Jalen have gotten that job if he were white?  \pause 
+
+  * **Fundamental problem of causal inference:** \pause 
+    - Can never observe counterfactuals, must be inferred.
+
+---
+
+# Criminal record experiment 
+
+\begin{center}
+\includegraphics[width=.4\textwidth]{figs/criminal_record.jpg}
+\end{center} \pause 
+
+  * Does having a criminal record affect job prospects? \pause 
+  * Experimental setting:\pause 
+    - Randomly assign 4 hired “confederates” (2 White, 2 Black) to apply to
+different jobs in Milwaukee.\pause 
+    - Men were matched on physical appearance, self-presentation, age, etc.\pause 
+    - Confederates would alternate indicating they had a criminal record.\pause 
+  * Outcome of interest: receiving a callback from a potential employer. 
+  
+---  
+
+# A tale of two applications 
+
+\begin{center}
+\begin{tabular}{ l | l  l }
+     & Criminal Record  & Callback? \\ \hline
+    Applicant 1 & Ex-felon & No \\ 
+    Applicant 2 & No criminal record & Yes \\ 
+\end{tabular}
+\end{center} 
+
+\pause 
+
+  * Did the first applicant not get a callback **because** they had a
+criminal record?
+
+---
+
+# Notation and Jargon  
+
+  * **Unit** (indexed by $i$): job application for employer \pause 
+  * **Treatment variable** $T_i$: criminal record or not \pause 
+  * **Treatment group** (treated units): applications with criminal record \pause
+  * **Control group** (untreated units): applications without criminal record \pause
+  * **Outcome variable** $Y_i$: callback
+ 
+\begin{center}  
+\begin{tabular}{ l | l  l }
+     & $T_i$ (ex-felon)  & $Y_i$ (callback) \\ \hline
+    Ex-felon applicant & 1 & 0 \\ 
+    Non-ex-felon applicant & 0  & 1 \\ 
+\end{tabular}
+\end{center}
+---
+
+# Causal effects and counterfactuals \pause
+
+  * What does "$T_i$ causes $Y_i$" mean? $\rightsquigarrow$ **counterfactuals**, "what if" \pause
+  * Would an employer treat criminal & noncriminal applicants differently? \pause
+  * Two **potential outcomes**: \pause
+    - $Y_i (1)$: would applicant $i$ get a callback if applied as an ex-felon? \pause
+    - $Y_i (0)$: would applicant $i$ get a callback if applied not as an ex-felon? \pause
+  * **Causal effect**: $Y_i (1)$ - $Y_i (0)$  \pause
+    - $Y_i (1) - Y_i (0) = 0 \rightsquigarrow$ criminal record has no impact on callback  \pause
+    - $Y_i (1) - Y_i (0) = -1 \rightsquigarrow$ criminal record prevents callback  \pause
+    - $Y_i (1) - Y_i (0) = +1 \rightsquigarrow$ criminal record leads to callback  
+    
+---
+
+# Potential Outcomes  \pause
+
+\begin{center}  
+\begin{tabular}{ l | l  l  l  l}
+     & $T_i$ (ex-felon)  & $Y_i$ (callback) & $Y_i (1)$ & $Y_i (0)$ \\ \hline
+    Ex-felon applicant & 1 & 0 & 0 & ???\\ 
+    Non-ex-felon applicant & 0  & 1 & ??? & 1 \\ 
+\end{tabular}
+\end{center}  \pause
+
+  * **Fundamental problem of causal inference**:  \pause
+    - We only observe one of the two potential outcomes.  \pause
+    - Observe $Y_i = Y_i (1)$ if $T_i = 1$ or $Y_i = Y_i (0)$ if $T_i = 0$ \pause
+  * To infer causal effect, we need to infer the missing counterfactuals!
+  
+---
+
+# How can we figure out counterfactuals? \pause
+
+\begin{center}
+\includegraphics[width=.4\textwidth]{figs/shining.jpg}
+\end{center}
+
+  * Find a similar unit! $\rightsquigarrow$ **matching** (Mill’s method of difference)  \pause
+  * Did applicant fail to get a job offer because of his criminal record? \pause
+    - $\rightsquigarrow$ find a non-ex-felon who is just like ex-felon applicant. \pause
+  * NJ increased the minimum wage. Causal effect on unemployment? \pause
+    - $\rightsquigarrow$ find a state similar to NJ that didn’t increase minimum wage.
+    
+---
+
+# Imperfect matches
+
+\begin{columns}
+  \begin{column}{0.4\textwidth}
+    \includegraphics[width=1\textwidth]{figs/twins.jpg}
+  \end{column} \pause
+  \begin{column}{0.6\textwidth}
+  \begin{itemize}
+  \item The problem: imperfect matches! \pause
+  \item Say we match $i$ (treated) and $j$ (control) \pause
+  \item \textbf{Selection Bias}: $Y_i (1) \neq Y_j (1)$  \pause
+  \item Those who take treatment may be different that those who take control. \pause
+  \item How can we correct for that?
+  \end{itemize}
+  \end{column}
+\end{columns}
+
+---
+
+# Assignments this week:
+
+  - **Every Tuesday**: QSS Tutorial is due (each one is worth 1% of your final grade) \pause 
+  - **This Friday**: 
+    - Lecture on randomized control trials
+    - Problem set 1 posted on Github, due next Friday 
+  
+  

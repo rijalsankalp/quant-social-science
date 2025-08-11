@@ -1,0 +1,167 @@
+---
+title: "PSC4375: Randomized Experiments"
+subtitle: "Week 1: Lecture 2"
+author: "Prof. Weldzius"
+institute: "Villanova University"
+date: "Slides Updated: `r Sys.Date()`"
+output:
+  beamer_presentation:
+    theme: "CambridgeUS"
+    colortheme: "seahorse"
+    fonttheme: "structurebold"
+classoption: "handout"
+---
+
+```{css,echo = F}
+.small .remark-code { /*Change made here*/
+  font-size: 85% !important;
+}
+.tiny .remark-code { /*Change made here*/
+  font-size: 50% !important;
+}
+```
+
+```{r,include=F}
+set.seed(123)
+options(width=60)
+knitr::opts_chunk$set(fig.align='center',fig.width=9,fig.height=5,message=F,warning=F)
+def.chunk.hook  <- knitr::knit_hooks$get("chunk")
+knitr::knit_hooks$set(chunk = function(x, options) {
+  x <- def.chunk.hook(x, options)
+  ifelse(options$size != "normalsize", paste0("\n \\", options$size,"\n\n", x, "\n\n \\normalsize"), x)
+})
+```
+
+# Changing minds on gay marriage
+
+  * Question: can we effectively persuade people to change their minds? \pause
+  * Hugely important question for political campaigns, companies, etc. \pause
+  * Psychological studies show it isn’t easy. \pause
+  * **Contact Hypothesis**: outgroup hostility diminished when people from different groups interact with one another. \pause
+  * Today we’ll explore this question the context of support for gay marriage and contact with a member of the LGBT community. \pause
+    - $Y_i =$ support for gay marriage (1) or not (0) \pause
+    - $T_i =$ contact with member of the LGBT community (1) or not (0)
+
+---
+
+# Causal effects and counterfactuals
+
+  * What does "$T_i$ causes $Y_i$" mean? $\rightsquigarrow$ **counterfactuals**, "what if" \pause
+  * Would citizen $i$ have supported gay marriage if they had contact with a member of the LGBT community? \pause
+  * Two **potential outcomes**: \pause
+    - $Y_i(1)$: would $i$ have supported gay marriage if they **had** contact with a member of the LGBT community? \pause
+    - $Y_i(0)$: would $i$ have supported  gay marriage if they  **didn't have** contact with a member of the LGBT community? \pause
+    
+  * **Causal effect** for citizen $i$: $Y_i(1) - Y_i(0)$ \pause
+  * **Fundamental problem of causal inference**: only one of the two potential outcomes is observable.
+
+---  
+
+# Sigma notation
+
+  * We will often refer to the **sample size** (number of units) as $n$.  \pause
+  * We often have $n$ measurements of some variable: $(Y_1,Y_2,...,Y_n)$ \pause
+  * We often want sums: how many in our sample support gay marriage? \pause
+  
+  $$
+  Y_1 + Y_2 + ... + Y_n
+  $$
+  
+  * Notation is a bit clunky, so we often use the **Sigma notation**:
+   
+  $$
+  \sum_{i=1}^n Y_i = Y_1 + Y_2 + ... + Y_n
+  $$
+  
+  * $\sum_{i=1}^n$ means sum each value from $Y_1$ to $Y_n$
+  
+---
+
+# Averages
+
+  * The **sample average** or **sample mean** is simply the sum of all values divided by the number of values. \pause
+  
+  * Sigma notation allows us to write this in a compact way: \pause
+  
+  $$
+  \bar{Y} = \frac{1}{n} \sum_{i=1}^n Y_i
+  $$
+  
+  * Suppose we surveyed 6 people and 3 supported gay marriage: 
+   \pause
+   
+  $$
+  \bar{Y} = \frac{1}{6} (1 + 1 + 1 + 0 + 0 + 0) = 0.5
+  $$
+  
+---
+
+# Quantity of interest
+
+  * We want to estimate the average causal effects over all units: \vspace{-5pt} \pause
+  
+  $$
+  \text{Sample Average Treatment Effect (SATE) } = \frac{1}{n} \sum_{i=1}^n \left( Y_i(1) - Y_i(0) \right)
+  $$
+   
+  * Why can't we just calculate this quantity directly? \pause
+  * What we can estimate instead: \vspace{-5pt} \pause
+  
+  $$
+  \text{Difference in means } = \bar{Y}_{treated} - \bar{Y}_{control}
+  $$
+    
+  - $\bar{Y}_{treated}$: observed average outcome for treated group
+  - $\bar{Y}_{control}$: observed average outcome for control group
+   
+   \pause
+  * When will the difference-in-means be a good estimate of the SATE?
+  
+---
+
+# Randomized control trials (RCTs)
+
+  * **Randomize control trial**: each unit's treatment assignment is determined by chance \pause
+    - e.g., flip a coin; draw read and blue chips from a hat; etc. \pause
+  * Randomization ensures **balance** between treatment and control group. \pause
+    - Treatment and control group are identical **on average** \pause
+    - Similar on both observable and unobservable characteristics. \pause
+  * Control group $\approx$ what would have happened to treatment group if they had taken control \pause
+    - $\bar{Y}_{control} \approx \frac{1}{n} \sum_{i=1}^n Y_i(0)$ \pause
+    - $\bar{Y}_{treated} - \bar{Y}_{control} \approx$ SATE 
+    
+---
+
+# Some potential problems with RCTs
+
+  * **Placebo effects**: \pause
+    - Respondents will be affected by any intervention, even if they shouldn't have any effect \pause
+  * **Hawthorne effects**: \pause
+    - Respondents act differently just knowing that they are under study.
+    
+---
+
+# Balance checking
+
+  * Can we determine if randomization "worked"? \pause
+  * If it did, we shouldn't see large differences between treatment and control group on **pretreatment variable** \pause
+    - Pretreatment variable are those that are unaffected by treatment \pause
+  * We can check in the actual data for some pretreatment variable $X$ \pause
+    - $\bar{X}_{treated}$: average value of variable for treated group \pause
+    - $\bar{X}_{control}$: average value of variable for control group \pause
+    - Under randomization, $\bar{X}_{treated} - \bar{X}_{control} \approx 0$
+    
+---
+
+# Multiple treatments
+
+  * Instead of 1 treatment, we might have multiple **treatment arms**: \pause
+    - Control condition
+    - Treatment A
+    - Treatment B
+    - Treatment C, etc.
+  * In this case, we will look at multiple comparisons: \pause
+    - $\bar{Y}_{treated,A} - \bar{Y}_{control}$ \pause
+    - $\bar{Y}_{treated,B} - \bar{Y}_{control}$ \pause
+    - $\bar{Y}_{treated,A} - \bar{Y}_{treated,B}$ \pause
+  * If treatment arms are randomly assigned, these differences will be good estimators for each causal contrast.

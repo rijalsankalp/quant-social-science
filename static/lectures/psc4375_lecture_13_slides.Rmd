@@ -1,0 +1,276 @@
+---
+title: "PSC4375: Varying Effects by Group"
+subtitle: "Week 8: Lecture 13"
+author: "Prof. Weldzius"
+institute: "Villanova University"
+date: "Slides Updated: `r Sys.Date()`"
+output:
+  beamer_presentation:
+    theme: "CambridgeUS"
+    colortheme: "seahorse"
+    fonttheme: "structurebold"
+    
+---
+
+```{css,echo = F}
+.small .remark-code { /*Change made here*/
+  font-size: 85% !important;
+}
+.tiny .remark-code { /*Change made here*/
+  font-size: 50% !important;
+}
+```
+
+```{r,include=F}
+set.seed(123)
+options(width=60)
+knitr::opts_chunk$set(fig.align='center',fig.width=9,fig.height=5,message=F,warning=F)
+def.chunk.hook  <- knitr::knit_hooks$get("chunk")
+knitr::knit_hooks$set(chunk = function(x, options) {
+  x <- def.chunk.hook(x, options)
+  ifelse(options$size != "normalsize", paste0("\n \\", options$size,"\n\n", x, "\n\n \\normalsize"), x)
+})
+library(tidyverse)
+```
+
+# Week 8
+
+\pause
+
+  - QSS Tidyverse Tutorial 6 due tomorrow \pause
+  - Proposal for final project due Wednesday by midnight (upload to Blackboard) \pause
+    - What is your tentative research question?
+    - What data is available to answer this question?
+    - Why are you interested in this question? \pause 
+    - How long? Be brief! Use bullet points. But you must upload a document
+  - Midterm: will discuss next week \pause
+  - This week: finishing up regression!
+
+---
+
+# Heterogeneous treatment effects 
+
+\pause
+  - **Heterogeneous treatment effects**: effect varies across groups.\pause
+    - Average effect of a drug is 0, but $+$ for men and $-$ for women. \pause
+    - Important questions for determining who should receive treatment. \pause
+    
+---
+
+# Social pressure experiment
+
+\centering
+![](figs/socialpressure.png){width=50%} 
+
+\pause 
+- `primary2004` whether the person voted in 2004, before the experiment. \pause
+- Do 2004 voters react differently to social pressure mailer than nonvoters? \pause
+- Two approaches: \pause
+  - Subsets, subsets, subsets. \pause
+  - Interaction terms in regression.
+    
+---
+
+# Subset approach
+
+\pause
+  - Easy way to estimate heterogeneous effects: our old friend, `filter()`, `group_by()`, and `summarize()`. Woo! \pause
+  - First, get the data
+  
+```{r}
+data(social, package="qss") 
+```
+  
+---
+
+# Subset approach
+
+  - Now, estimate the ATE for the **voters**: \pause
+  
+\footnotesize 
+```{r}
+VotersATE <- social %>%
+  filter(primary2004 == 1,
+         messages %in% c("Control","Neighbors")) %>%
+  group_by(messages) %>%
+  summarize(primary2006_mean = mean(primary2006)) %>%
+  pivot_wider(names_from = "messages",
+              values_from = "primary2006_mean") %>%
+  mutate(ate_v = Neighbors - Control) %>%
+  select(ate_v)
+VotersATE
+```
+
+---
+
+# Filter approach
+
+  - Now, estimate the ATE for the **nonvoters**: \pause
+
+\footnotesize 
+```{r}
+NonvotersATE <- social %>%
+  filter(primary2004 == 0,
+         messages %in% c("Control","Neighbors")) %>%
+  group_by(messages) %>%
+  summarize(primary2006_mean = mean(primary2006)) %>%
+  pivot_wider(names_from = "messages",
+              values_from = "primary2006_mean") %>%
+  mutate(ate_nv = Neighbors - Control) %>%
+  select(ate_nv)
+NonvotersATE
+```
+    
+---
+
+# Difference in effects
+
+  - How much does the estimated treatment effect differ between groups? \pause
+  
+```{r}
+VotersATE$ate_v - NonvotersATE$ate_nv
+```
+
+\pause
+  - Any easier way to allow for different effects of treatment by groups?
+  
+---
+
+# Interaction terms
+
+\pause
+  - Can allow for different effects of a variable with an interaction term: \pause
+  
+$$
+\text{turnout}_i = \alpha + \beta_1\text{primary2004}_i + \beta_2\text{neighbors}_i + 
+$$
+$$
+\qquad \qquad \beta_3(\text{primary2004}_i \times \text{neighbors}_i) + \varepsilon_i
+$$
+
+\pause
+  - Primary 2004 variable multiplied by the neighbors variable.
+    - Equal to 1 if voted in 2004 (primary2004 == 1) and received neighbors mailer (neighbors == 1) \pause
+  - Easiest to understand by investigating predicted values.
+  
+---
+
+# Predicted values from non-interacted model
+
+ \pause
+ 
+  - Let $X_i =$ primary2004$_i$ and $Z_i =$ neighbors$_i$:  \pause
+  
+$$
+\hat{Y}_i = \hat{\alpha} + \hat{\beta}_1 X_i + \hat{\beta}_2 Z_i
+$$
+\pause
+\begin{center}
+\begin{tabular}{ r | l  l }
+ & Control ($Z_i = 0$) & Neighbors ($Z_i = 1$) \\
+\hline
+non-voter ($X_i = 0$)  & \only<3-10hu>{$\hat{\alpha}$} & \only<4-10>{$\hat{\alpha} + \hat{\beta}_2$} \\
+voter ($X_i = 1$) & \only<5-10>{$\hat{\alpha} + \hat{\beta}_1$} & \only<6-10>{$\hat{\alpha} + \hat{\beta}_1 + \hat{\beta}_2$} \\
+\end{tabular}
+\end{center}
+<!-- \begin{center} -->
+<!-- \begin{tabular}{ r | l  l } -->
+<!--  & Control ($Z_i = 0$) & Neighbors ($Z_i = 1$) \\ -->
+<!-- \hline -->
+<!-- non-voter ($X_i = 0$)  & $\hat{\alpha} + \hat{\beta}_2 0\hat{\alpha}$ & $\hat{\alpha}+\hat{\beta}_1 0 + \hat{\beta}_2 1\hat{\alpha}  $ \\ -->
+<!-- voter ($X_i = 1$) & $\hat{\alpha} + \hat{\beta}_1$ & $\hat{\alpha} + \hat{\beta}_1 + \hat{\beta}_2$ \\ -->
+<!-- \end{tabular} -->
+<!-- \end{center} -->
+
+  - \only<7-10>{Effect of Neighbors for non-voters:} \only<8-10>{$(\hat{\alpha} + \hat{\beta}_2) - (\hat{\alpha}) = \hat{\beta}_2$}
+  - \only<9-10>{Effect of Neighbors for voters:} \only<10>{$(\hat{\alpha} + \hat{\beta}_1  + \hat{\beta}_2) - (\hat{\alpha} + \hat{\beta}_1) = \hat{\beta}_2$}
+
+---
+
+# Predicted from interacted model
+
+  - Now for the interacted model:
+  
+$$
+\hat{Y}_i = \hat{\alpha} + \hat{\beta}_1 X_i + \hat{\beta}_2 Z_i + \hat{\beta}_3 X_i Z_i
+$$
+
+\pause 
+
+\begin{center}
+\begin{tabular}{ r | l  l }
+ & Control ($Z_i = 0$) & Neighbors ($Z_i = 1$) \\
+\hline
+non-voter ($X_i = 0$)  & \only<2-5>{$\hat{\alpha}$} & \only<3-5>{$\hat{\alpha} + \hat{\beta}_2$} \\
+voter ($X_i = 1$) & \only<4-5>{$\hat{\alpha} + \hat{\beta}_1$} & \only<5>{$\hat{\alpha} + \hat{\beta}_1 + \hat{\beta}_2 + \hat{\beta}_3$} \\
+\end{tabular}
+\end{center}
+
+---
+
+# Interpreting coefficients
+
+$$
+\hat{Y}_i = \hat{\alpha} + \hat{\beta}_1\text{primary2004}_i + \hat{\beta}_2 \text{neighbors}_i 
+$$
+
+$$
+\qquad \qquad \qquad \qquad + \hat{\beta}_3 (\text{primary2004}_i \times \text{neighbors}_i)
+$$
+\pause 
+\begin{center}
+\begin{tabular}{ r | l  l }
+ & Control Group & Neighbors Group \\
+\hline
+2004 primary non-voter  & $\hat{\alpha}$ & $\hat{\alpha} + \hat{\beta}_2  $ \\
+2004 primary voter  & $\hat{\alpha} + \hat{\beta}_1$ & $\hat{\alpha} + \hat{\beta}_1 + \hat{\beta}_2 + \hat{\beta}_3$ \\
+\end{tabular}
+\end{center}
+\pause 
+
+  - $\hat{\alpha}$: turnout rate for 2004 nonvoters in control group. \pause 
+  - $\hat{\beta}_1$: avg difference in turnout between 2004 voters and nonvoters. \pause 
+  - $\hat{\beta}_2$: effect of neighbors for 2004 nonvoters. \pause 
+  - $\hat{\beta}_3$: difference in the effect of neighbors mailer between 2004 voters and nonvoters.
+
+---
+
+# Interactions in R
+
+  - You can include an interaction with `var1`:`var2`:
+  
+```{r}
+social.neighbor <- social %>%
+  mutate(neighbors = ifelse(messages=="Neighbors",1,
+                            ifelse(messages=="Control",0,NA))) %>%
+  select(primary2006,primary2004,neighbors) %>%
+  drop_na()
+    
+fit <- lm(primary2006 ~ primary2004 + neighbors +
+          primary2004:neighbors, data = social.neighbor)
+
+coef(fit)
+```
+
+---
+
+# Interactions in R
+
+```{r}
+coef(fit)
+```
+
+\pause
+
+  - Compare coefficients to earlier approach:
+  
+```{r}
+NonvotersATE$ate_nv
+```
+
+\pause
+
+```{r}
+VotersATE$ate_v - NonvotersATE$ate_nv
+```
+

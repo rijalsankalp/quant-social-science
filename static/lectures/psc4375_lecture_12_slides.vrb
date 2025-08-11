@@ -1,0 +1,46 @@
+\frametitle{Linear regression for experiments}
+\phantomsection\label{linear-regression-for-experiments}
+\pause
+
+\begin{itemize}
+\tightlist
+\item
+  Under \textbf{randomization}, we can estimate the ATE with
+  regression:\pause
+\end{itemize}
+
+\footnotesize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{cct.pri.ate }\OtherTok{\textless{}{-}}\NormalTok{ cct }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{group\_by}\NormalTok{(treatment) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{summarize}\NormalTok{(}\AttributeTok{pri2000s\_mean =} \FunctionTok{mean}\NormalTok{(pri2000s)) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{pivot\_wider}\NormalTok{(}\AttributeTok{names\_from =}\NormalTok{ treatment, }\AttributeTok{values\_from =}\NormalTok{ pri2000s\_mean) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{pri\_ate =} \StringTok{\textasciigrave{}}\AttributeTok{1}\StringTok{\textasciigrave{}} \SpecialCharTok{{-}} \StringTok{\textasciigrave{}}\AttributeTok{0}\StringTok{\textasciigrave{}}\NormalTok{)}
+\NormalTok{cct.pri.ate}\SpecialCharTok{$}\NormalTok{pri\_ate}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## [1] 3.622496
+\end{verbatim}
+
+\pause
+\footnotesize
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{lm}\NormalTok{(pri2000s }\SpecialCharTok{\textasciitilde{}}\NormalTok{ treatment, }\AttributeTok{data =}\NormalTok{ cct)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##
+## Call:
+## lm(formula = pri2000s ~ treatment, data = cct)
+##
+## Coefficients:
+## (Intercept)    treatment
+##      34.489        3.622
+\end{verbatim}

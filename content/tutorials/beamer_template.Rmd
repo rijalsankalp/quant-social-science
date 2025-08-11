@@ -1,0 +1,89 @@
+---
+title: "Presentation Title"
+subtitle: "Presentation Subtitle"
+author: "Your Name"
+institute: "Villanova University"
+date: "`r Sys.Date()`"
+output:
+  beamer_presentation:
+    theme: "CambridgeUS"
+    colortheme: "seahorse"
+    fonttheme: "structurebold"
+header-includes:
+  - \usepackage{tikz}
+  - \usepackage{graphicx} 
+  - \usepackage{amssymb}
+  - \usepackage{fontenc}
+  - \usepackage{xcolor}    
+  - \usepackage{array}
+classoption: "handout"  
+---
+
+```{css,echo = F}
+.small .remark-code { /*Change made here*/
+  font-size: 85% !important;
+}
+.tiny .remark-code { /*Change made here*/
+  font-size: 50% !important;
+}
+```
+
+```{r,include=F}
+set.seed(123)
+options(width=60)
+knitr::opts_chunk$set(fig.align='center',fig.width=9,fig.height=5,message=F,warning=F)
+def.chunk.hook  <- knitr::knit_hooks$get("chunk")
+knitr::knit_hooks$set(chunk = function(x, options) {
+  x <- def.chunk.hook(x, options)
+  ifelse(options$size != "normalsize", paste0("\n \\", options$size,"\n\n", x, "\n\n \\normalsize"), x)
+})
+library(tidyverse)
+library(tinytex)
+library(gridExtra)
+```
+
+# Slide 1 title (tell us something about what we're about to see)
+
+- Motivation
+- Argument
+
+---
+
+# Slide 2 title (maybe something with your data here to further motivate your analysis)
+
+```{r, echo=FALSE, fig.height=3, fig.width=4}
+# echo = FALSE stops Rmarkdown from showing anything in this chunk when you knit 
+# fig.height and fig.width might need to be adjusted
+```
+
+---
+
+# Slide 3 title
+
+- Here you can either include more motivating plots OR your hypothesis; if you include your hypothesis, think about including your statistical model equation as well (generic example below)
+
+$$
+\text{outcome}_i = \alpha + \beta_1 (\text{main predictor})_i + \beta_2 (\text{control var1})_i + \dots + \epsilon_i
+$$
+
+- $i$ indicates the units (e.g., countries, elections, etc.)
+
+---
+
+# Slide 4 title (show some initial results)
+
+```{r, echo=FALSE}
+# Here you can include your statistical model. You'll want to output the results in a readable way. 
+# Use this link to help with formatting these tables (see "regression table"); note that you'll have to use some new libraries (and note what they include at the beginning of the R chunk, e.g., "message = FALSE"): https://zief0002.github.io/book-8252/pretty-printing-tables-in-markdown.html
+```
+
+---
+
+# Slide 5 title (concluding thoughts/next steps)
+
+- Layout your next steps (the `\pause` after each line allows me to reveal each line with a click; no need to put this on your last line of text): \pause
+  1. I need to look at the impact of a particular covariate/control, or add more controls \pause
+  2. Check residuals \pause
+  3. etc.
+
+

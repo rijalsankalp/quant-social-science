@@ -1,0 +1,178 @@
+---
+title: "PSC4375: Observational Studies"
+subtitle: "Week 2: Lecture 3"
+author: "Prof. Weldzius"
+institute: "Villanova University"
+date: "Slides Updated: `r Sys.Date()`"
+output:
+  beamer_presentation:
+    theme: "CambridgeUS"
+    colortheme: "seahorse"
+    fonttheme: "structurebold"
+---
+
+```{css,echo = F}
+.small .remark-code { /*Change made here*/
+  font-size: 85% !important;
+}
+.tiny .remark-code { /*Change made here*/
+  font-size: 50% !important;
+}
+```
+
+```{r,include=F}
+set.seed(123)
+options(width=60)
+knitr::opts_chunk$set(fig.align='center',fig.width=9,fig.height=5,message=F,warning=F)
+def.chunk.hook  <- knitr::knit_hooks$get("chunk")
+knitr::knit_hooks$set(chunk = function(x, options) {
+  x <- def.chunk.hook(x, options)
+  ifelse(options$size != "normalsize", paste0("\n \\", options$size,"\n\n", x, "\n\n \\normalsize"), x)
+})
+```
+
+# Do newspaper endorsements matter? 
+
+  * Can newspaper endorsements change voters' minds? \pause 
+  * Why not compare vote choice of readers of different papers? \pause 
+    - Problem: readers choose papers based on their previous beliefs \pause
+    - Liberals $\rightsquigarrow$ New York Times, conservatives $\rightsquigarrow$ Wall Street Journal \pause
+  * Could do a lab experiment, but there are concerns over **external validity** \pause
+  * Study for today: British newspapers switching their endorsements. \pause
+    - Some newspapers endorsing Tories in 1992 switched to Labour in 1997 \pause
+    - **Treated group**: readers of Tory $\rightarrow$ Labour papers \pause
+    - **Control group**: readers of papers who didn't switch
+    
+---
+
+# Observational studies
+
+  * Example of an **observational study**: \pause
+    - We as researchers observe a naturally assigned treatment \pause
+    - Very common: often cna't randomize for ethical/logistical reasons \pause
+  * **Internal validity**: Are the causal assumptions satisfied? Can we interpret this as a causal effect? \pause
+    - RCTs usually have higher internal validity \pause
+    - Observational studies less so, because pre-treatment variable may differ between treatment and control groups \pause
+  * **External validity**: Can the conclusions/estimated effects be generalized beyond this study? \pause
+    - RCTs weaker here because often very expensive to conduct on representative samples \pause
+    - Observational studies often have larger/more representative samples that improve external validity
+
+---    
+    
+# Confounding
+
+  * **Confounder**: pre-treatment variable affecting treatment and the outcome \pause
+    - Leftists ($X$) more likely to read newspapers switching to Labour ($T$) \pause
+    - Leftists ($X$) also more likely to vote for Labour ($Y$) \pause
+    
+  * **Confounding bias** in the estimated SATE due to these differences \pause
+    - $\bar{Y}_{control}$ not a good proxy for $Y_i(0)$ in treated group \pause
+    - one type: **selection bias** from self-selection into treatment
+    
+---
+
+# Research designs
+
+  * How can we find a good comparison group? \pause
+  * Depends on the data we have available \pause
+  * Three general types of observational study **research designs**: \pause
+    
+    1. **Cross-sectional design**: compare outcomes treated and control units at one point in time \pause
+    2. **Before-and-after design**: compare outcomes before and after a unit has been treated, but need over-time data on treated group \pause
+    3. **Differences-in-differences design**: use before/after information for the treated and control group; need over-time data on treated and control group
+    
+---
+
+# Cross-sectional design
+
+  * Compare treatment and control groups after treatment happens \pause
+    - Readers of switching papers vs. readers of non-switching papers in 1997 \pause
+    
+  * Treatment and control groups assumed identical on average as in RCT \pause
+    - Sometimes called **unconfoundedness** or **as-if randomized** \pause
+    
+  * Cross-section comparison estimate: \pause
+  
+  $$
+  \bar{Y}_{treated}^{after} - \bar{Y}_{control}^{after}
+  $$
+  \pause 
+  
+  * Could there be confounders?
+  
+---
+
+# Statistical control
+
+  * **statistical control**: adjust for confounders using statistical procedures  \pause
+    - Can help to reduce confounding bias \pause
+    
+  * One type of statistical control: **subclassification** \pause
+    - Compare treated and controls groups within levels of a confounder \pause
+    - Remaining effect can't be due to the confounder \pause
+    
+  * Threat to inference: we can only control for observed variables $\rightsquigarrow$ threat of **unmeasured confounding**
+  
+---
+
+# Before-and-after comparison
+
+  * Compare readers of party-switching newspapers before and after switch \pause
+  * Advantage: all person-specific features held fixed \pause
+    - comparing within a person over time \pause
+    
+  * Before-and-after estimate: \pause
+  
+  $$
+  \bar{Y}_{treated}^{after} - \bar{Y}_{treated}^{before}
+  $$
+  \pause 
+  
+  * Threat to inference: **time-varying confounders**
+    - Time trend: Labour just did better overall in 1997 compared to 1992
+    
+---
+
+# Differences in differences (Diff-in-Diff)
+
+  * Key idea: use the before-and-after difference of **control group** to infer what would have happened to **treatment group** without treatment \pause
+  * DiD estimate: \pause
+  
+  $$
+  \left(\bar{Y}_{treated}^{after} - \bar{Y}_{treated}^{before} \right) - \left(\bar{Y}_{control}^{after} - \bar{Y}_{control}^{before} \right)
+  $$
+  \pause 
+  
+  * Change in treated group above and beyond the change in control group  \pause
+  
+  * **Parallel time trend assumption** \pause
+    - Changes in vote of readers of non-switching papers roughly the same as changes that readers of switching papers would have been if they read non-switching papers \pause
+    - Threat to inference: non-parallel trends
+    
+---
+
+# Summarizing approaches:
+
+  1. **Cross-sectional comparison** 
+    - compare treated units with control units after treatment
+    - Assumption: treated and control units are comparable
+    - Possible confounding \pause
+    
+  2. **Before-and-after comparison**
+    - Compare the same units before and after treatment
+    - Assumption: no time-varying confounding \pause
+    
+  3. **Differences-in-differences**
+    - Assumption: parallel trends assumptions
+    - Under this assumption, it accounts for unit-specific and time-varying confounding \pause
+    
+  * All rely on assumptions that can't be verified to handle confounding
+  * RCTs handle confounding by design
+  
+---
+
+# Causality understanding check
+
+\includegraphics[width=1\textwidth]{figs/correlation.png}
+
+See also: https://www.tylervigen.com/spurious-correlations
