@@ -1,97 +1,148 @@
 <table class="table schedule" style="max-width: 100%">
   <thead>
-    {{- /* Use a proper thead for the header row for better HTML semantics */}}
     <tr>
-      <td style="width: 5%; text-align: center" class="mid-table-header">
-        Week
-      </td>
-      <td style="width: 10%; text-align: left" class="mid-table-header">
-        Date
-      </td>
-      <td style="width: 15%; text-align: left" class="mid-table-header">
-        Title
-      </td>
-      <td style="width: 20%; text-align: left" class="mid-table-header">
-        Readings
-      </td>
-      <td style="width: 10%; text-align: left" class="mid-table-header">
-        Assignment
-      </td>
-      <td style="width: 10%; text-align: center" class="mid-table-header">
-        Due Date
-      </td>
-      <td style="width: 15%; text-align: center" class="mid-table-header">
-        Materials
-      </td>
+      <td style="width: 5%; text-align: center" class="mid-table-header">Week</td>
+      <td style="width: 10%; text-align: left" class="mid-table-header">Date</td>
+      <td style="width: 15%; text-align: left" class="mid-table-header">Title</td>
+      <td style="width: 20%; text-align: left" class="mid-table-header">Readings</td>
+      <td style="width: 10%; text-align: left" class="mid-table-header">Assignment</td>
+      <td style="width: 10%; text-align: center" class="mid-table-header">Due Date</td>
+      <td style="width: 15%; text-align: center" class="mid-table-header">Materials</td>
     </tr>
   </thead>
   <tbody>
-    {{- range .Site.Data.schedule.lessons }} {{- if not .header }} {{/* We skip
-    header entries in the body */}}
-    <tr>
-      <td align="center">{{ .weeknum }}</td>
+    {{- range .Site.Data.schedule.lessons }}
+      {{- if not .header }}
+        {{- $lesson := . }}
 
-      <td align="left">{{ dateFormat "Aug 11" .date }}</td>
-
-      <td style="text-align: left">{{ .title | markdownify }}</td>
-
-      <td style="text-align: left">
-        {{- if .readings }}
-        <ul style="list-style-type: none; margin: 0; padding: 0">
-          {{- range .readings }}
-          <li>
-            {{- if .link -}}
-            <a href="{{ .link }}">{{ .name | markdownify }}</a>
-            {{- else -}} {{ .name | markdownify }} {{- end -}}
-          </li>
-          {{- end }}
-        </ul>
-        {{- end }}
-      </td>
-
-      <td style="text-align: left">
+        {{- $assignmentsCount := 0 }}
         {{- if .assignments }}
-        <ul style="list-style-type: none; margin: 0; padding: 0">
+          {{- $assignmentsCount = len .assignments }}
+        {{- end }}
+
+        {{- $examsCount := 0 }}
+        {{- if .exams }}
+          {{- $examsCount = len .exams }}
+        {{- end }}
+
+        {{- $numRows := add $assignmentsCount $examsCount }}
+        {{- if eq $numRows 0 }}
+          {{- $numRows = 1 }}
+        {{- end }}
+
+        {{- $allItems := slice }}
+        {{- if .assignments }}
           {{- range .assignments }}
-          <li>
-            {{- if .link -}}
-            <a href="{{ $.Site.BaseURL }}/problemsets/{{ .link }}"
-              >{{ .name | markdownify }}</a
-            >
-            {{- else -}} {{ .name | markdownify }} {{- end -}}
-          </li>
+            {{- $allItems = $allItems | append (dict "type" "assignment" "item" .) }}
           {{- end }}
-        </ul>
         {{- end }}
-      </td>
 
-      <td align="center">
-        {{- if .assignments }}
-        <ul style="list-style-type: none; margin: 0; padding: 0">
-          {{- range .assignments }} {{- if .due }}
-          <li>{{ dateFormat "Aug 11" .due }}</li>
-          {{- else }}
-          <li>-</li>
-          {{- end }} {{- end }}
-        </ul>
+        {{- if .exams }}
+          {{- range .exams }}
+            {{- $allItems = $allItems | append (dict "type" "exam" "item" .) }}
+          {{- end }}
         {{- end }}
-      </td>
 
-      <td align="center">
-        {{- if .week }}
-        <a
-          href="{{ $.Site.BaseURL }}/weeks/{{ .week }}/"
-          title="Class Materials"
-        >
-          <i class="fas fa-chalkboard-teacher fa-lg"></i>
-        </a>
+        {{- if gt (len $allItems) 0 }}
+          {{- range $idx, $elem := $allItems }}
+            <tr>
+              {{- if eq $idx 0 }}
+                <td align="center" rowspan="{{ $numRows }}">{{ $lesson.weeknum }}</td>
+                <td align="left" rowspan="{{ $numRows }}">{{ dateFormat "Jan 2" $lesson.date }}</td>
+                <td style="text-align: left" rowspan="{{ $numRows }}">{{ $lesson.title | markdownify }}</td>
+                <td style="text-align: left" rowspan="{{ $numRows }}">
+                  {{- if $lesson.readings }}
+                    <ul style="list-style-type: none; margin: 0; padding: 0">
+                      {{- range $lesson.readings }}
+                        <li>
+                          {{- if .link -}}
+                            <a href="{{ .link }}">{{ .name | markdownify }}</a>
+                          {{- else -}}
+                            {{ .name | markdownify }}
+                          {{- end }}
+                        </li>
+                      {{- end }}
+                    </ul>
+                  {{- end }}
+                </td>
+              {{- end }}
+
+              <td style="text-align: left; padding-left: 1em;">
+                {{- if eq $elem.type "assignment" }}
+                  <ul style="list-style-type: disc; margin: 0; padding: 0;">
+                    <li>
+                      {{- if $elem.item.link -}}
+                        <a href="{{ $.Site.BaseURL | relURL }}/problemsets/{{ $elem.item.link }}">
+                          {{ $elem.item.name | markdownify }}
+                        </a>
+                      {{- else -}}
+                        {{ $elem.item.name | markdownify }}
+                      {{- end }}
+                    </li>
+                  </ul>
+                {{- else if eq $elem.type "exam" }}
+                  <strong>Exam:</strong> <a href="{{ $.Site.BaseURL | relURL }}/exams/{{ $elem.item.link }}">{{ $elem.item.name | markdownify }}</a>
+                {{- end }}
+              </td>
+
+              <td style="text-align: center;">
+                {{- if $elem.item.due }}
+                  {{ dateFormat "Jan 2" $elem.item.due }}
+                {{- else }}
+                  -
+                {{- end }}
+              </td>
+
+              {{- if eq $idx 0 }}
+                <td align="center" rowspan="{{ $numRows }}">
+                  {{- if $lesson.week }}
+                    <a href="{{ $.Site.BaseURL | relURL }}/weeks/{{ $lesson.week }}/" title="Class Materials">
+                      <i class="fas fa-chalkboard-teacher fa-lg"></i>
+                    </a>
+                  {{- else }}
+                    <font color="f1f1f1">
+                      <i class="fas fa-chalkboard-teacher fa-lg"></i>
+                    </font>
+                  {{- end }}
+                </td>
+              {{- end }}
+            </tr>
+          {{- end }}
         {{- else }}
-        <font color="f1f1f1"
-          ><i class="fas fa-chalkboard-teacher fa-lg"></i
-        ></font>
+          <!-- No assignments or exams, single row -->
+          <tr>
+            <td align="center">{{ $lesson.weeknum }}</td>
+            <td align="left">{{ dateFormat "Jan 2" $lesson.date }}</td>
+            <td style="text-align: left">{{ $lesson.title | markdownify }}</td>
+            <td style="text-align: left">
+              {{- if $lesson.readings }}
+                <ul style="list-style-type: none; margin: 0; padding: 0">
+                  {{- range $lesson.readings }}
+                    <li>
+                      {{- if .link -}}
+                        <a href="{{ .link }}">{{ .name | markdownify }}</a>
+                      {{- else -}}
+                        {{ .name | markdownify }}
+                      {{- end }}
+                    </li>
+                  {{- end }}
+                </ul>
+              {{- end }}
+            </td>
+            <td></td>
+            <td></td>
+            <td align="center">
+              {{- if $lesson.week }}
+                <a href="{{ $.Site.BaseURL | relURL }}/weeks/{{ $lesson.week }}/" title="Class Materials">
+                  <i class="fas fa-chalkboard-teacher fa-lg"></i>
+                </a>
+              {{- else }}
+                <font color="f1f1f1"><i class="fas fa-chalkboard-teacher fa-lg"></i></font>
+              {{- end }}
+            </td>
+          </tr>
         {{- end }}
-      </td>
-    </tr>
-    {{- end }} {{- end }}
+      {{- end }}
+    {{- end }}
   </tbody>
 </table>

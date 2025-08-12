@@ -7,8 +7,8 @@ weight: 10
 
 title: "Quantitative Social Science"
 
-# Hero image (optional). Enter filename of an image in the `static/img/` folder.
-hero_media: psc4375-logo.png
+# Hero image (optional). Enter filename of an image in the `static/media/` folder.
+hero_media: logo.png
 
 design:
   background:

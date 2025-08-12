@@ -133,8 +133,8 @@ lessons:
       - name: "QSS Tidyverse Tutorial 5"
         due: 2025-02-18
     exams:
-      - name: "Exam 1"
-        link: "psc4375_s25_exam"
+      - name: "Exam1"
+        link: "psc4375_s25_exam1"
         due: 2025-02-28
 
   - title: "Prediction: More Regression!"
@@ -269,7 +269,7 @@ lessons:
     date: 2025-05-05
     week: "17-final-projects"
     exams:
-      - name: "Exam 2"
+      - name: "Exam2"
         link: "psc4375_s25_exam2"
         due: 2025-05-09
     assignments:
