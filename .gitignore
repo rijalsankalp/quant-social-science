@@ -2,6 +2,7 @@
 .Rhistory
 .RData
 .Ruserdata
+.Rbuildignore
 .Rproj
 .DS_Store
 public/
