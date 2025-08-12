@@ -5,15 +5,14 @@ name: Build and Deploy Blogdown Site
 
 on:
   push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+    branches:
+      - main
 
 jobs:
-  build-deploy:
+  build:
     runs-on: ubuntu-latest
     env:
-      HUGO_VERSION: "0.125.7" # Set your Hugo version here
+      HUGO_VERSION: "0.125.7"
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -54,10 +53,23 @@ jobs:
           Rscript -e 'blogdown::install_hugo(version = Sys.getenv("HUGO_VERSION"), force = TRUE)'
           Rscript -e 'blogdown::build_site()'
 
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
+      -  name: Upload public dir as artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./public
-          publish_branch: gh-pages
-          force_orphan: true
+          path: public
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    permissions:
+      pages: write
+      id-token: write
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
