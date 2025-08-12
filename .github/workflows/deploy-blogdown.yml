@@ -53,7 +53,7 @@ jobs:
           Rscript -e 'blogdown::install_hugo(version = Sys.getenv("HUGO_VERSION"), force = TRUE)'
           Rscript -e 'blogdown::build_site()'
 
-      -  name: Upload public dir as artifact
+      - name: Upload public dir as artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: public
