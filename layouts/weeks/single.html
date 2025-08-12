@@ -39,18 +39,18 @@
           <div class="article-style">
             <hr />
             <section class="week-details">
-              <h2>Week Details</h2>
+              <h2>Week {{ $currentWeekData.weeknum }}</h2>
               <ul>
-                <li><strong>Week:</strong> {{ $currentWeekData.weeknum }}</li>
                 <li>
                   <strong>Date:</strong> {{ dateFormat "Monday, Jan 2, 2006"
                   $currentWeekData.date }}
                 </li>
-                <li><strong>Title:</strong> {{ $currentWeekData.title }}</li>
+
                 {{ with $currentWeekData.goal }}
                 <li><strong>Goal:</strong> {{ . }}</li>
                 {{ end }}
               </ul>
+
               {{ with $currentWeekData.readings }}
               <h3>Readings</h3>
               <ul>
@@ -67,8 +67,9 @@
               <ul>
                 {{ range . }}
                 <li>
-                  {{- if .link }}<a href="{{ .link }}">{{ .name }}</a>{{ else
-                  }}{{ .name }}{{ end }} {{- with .day }}
+                  {{- if .link }}
+                  <a href="{{ .Site.BaseURL | relURL }}lectures/{{ .link }}">{{ .name }}</a
+                  >{{ else }}{{ .name }}{{ end }} {{- with .day }}
                   <span style="color: #888">({{ . }})</span>{{ end }}
                 </li>
                 {{ end }}
@@ -78,7 +79,7 @@
               <ul>
                 {{ range . }}
                 <li>
-                  {{- if .link }}<a href="{{ .link }}">{{ .name }}</a>{{ else
+                  {{- if .link }}<a href="{{ .Site.BaseURL | relURL }}problemsets/{{ .link }}">{{ .name }}</a>{{ else
                   }}{{ .name }}{{ end }} {{- with .due }}
                   <span style="color: #888"
                     >(Due: {{ dateFormat "Monday, Jan 2, 2006" . }})</span
@@ -87,13 +88,12 @@
                 </li>
                 {{ end }}
               </ul>
-              {{ end }}
-              {{ with $currentWeekData.exams }}
+              {{ end }} {{ with $currentWeekData.exams }}
               <h3>Exams</h3>
               <ul>
                 {{ range . }}
                 <li>
-                  {{- if .link }}<a href="{{ .link }}">{{ .name }}</a>{{ else
+                  {{- if .link }}<a href="{{ .Site.BaseURL | relURL }}exams/{{ .link }}">{{ .name }}</a>{{ else
                   }}{{ .name }}{{ end }} {{- with .due }}
                   <span style="color: #888"
                     >(Due: {{ dateFormat "Monday, Jan 2, 2006" . }})</span
@@ -107,9 +107,8 @@
               <ul>
                 {{ range . }}
                 <li>
-                  {{- if .link }}<a href="{{ .link }}">{{ .name }}</a>{{ else
-                  }}{{ .name }}{{ end }} {{- if .download }}
-                  <span style="color: #888">(Download)</span>{{ end }}
+                  {{- if .link }}<a href="{{ .Site.BaseURL | relURL }}lectures/{{ .link }}">{{ .name }}</a>{{ else
+                  }}{{ .name }}{{ end }}
                 </li>
                 {{ end }}
               </ul>

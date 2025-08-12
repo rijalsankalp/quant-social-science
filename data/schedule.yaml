@@ -23,11 +23,10 @@ lessons:
         ins: "See instructions in syllabus."
         due: 2025-01-15
       - name: "Problem Set 0"
-        link: "psc4375_s25_pset0.Rmd"
+        link: "psc4375_s25_pset0"
         due: 2025-01-17
     classMaterials:
       - name: "Week 0: In-class Practice R script"
-        download: true
         link: "Week0_R_practice.R"
 
   - title: "Causality: Randomized Experiments"
@@ -50,7 +49,7 @@ lessons:
       - name: "QSS Tidyverse Tutorial 1"
         due: 2025-01-21
       - name: "Problem Set 1"
-        link: "psc4375_s25_pset1.Rmd"
+        link: "psc4375_s25_pset1"
         due: 2025-01-31
 
   - title: "Causality: Observational Studies"
@@ -92,7 +91,7 @@ lessons:
       - name: "QSS Tidyverse Tutorial 3"
         due: 2025-02-04
       - name: "Problem Set 2"
-        link: "psc4375_s25_pset2.Rmd"
+        link: "psc4375_s25_pset2"
         due: 2025-02-14
 
   - title: "Measurement: Sampling & Bivariate Statistics"
@@ -135,7 +134,7 @@ lessons:
         due: 2025-02-18
     exams:
       - name: "Exam 1"
-        link: "psc4375_s25_exam.Rmd"
+        link: "psc4375_s25_exam"
         due: 2025-02-28
 
   - title: "Prediction: More Regression!"
@@ -192,7 +191,7 @@ lessons:
       - name: "QSS Tidyverse Tutorial 7"
         due: 2025-03-18
       - name: "Problem Set 3"
-        link: "psc4375_s25_pset3.Rmd"
+        link: "psc4375_s25_pset3"
         due: 2025-03-28
 
   - title: "Probability: Random Variables & Large Samples"
@@ -224,7 +223,7 @@ lessons:
       - name: "QSS Tidyverse Tutorial 9"
         due: 2025-04-01
       - name: "Problem Set 4"
-        link: "psc4375_s25_pset4.Rmd"
+        link: "psc4375_s25_pset4"
         due: 2025-04-25
 
   - title: "Inference: Hypothesis Testing"
@@ -249,7 +248,7 @@ lessons:
       - name: "QSS 7.3"
     assignments:
       - name: "Problem Set 4"
-        link: "psc4375_s25_pset4.Rmd"
+        link: "psc4375_s25_pset4"
         due: 2025-04-16
 
   - title: "Class Presentations"
@@ -271,7 +270,7 @@ lessons:
     week: "17-final-projects"
     exams:
       - name: "Exam 2"
-        link: "psc4375_s25_exam2.Rmd"
+        link: "psc4375_s25_exam2"
         due: 2025-05-09
     assignments:
       - name: "Final project"

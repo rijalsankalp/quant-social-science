@@ -9,9 +9,6 @@
             allowfullscreen>
     </iframe>
   </div>
-  <p style="text-align: center; font-size: 0.9em; margin-top: 8px;">
-    Can't see the PDF? <a href="{{ $file.RelPermalink }}" target="_blank">Download it directly</a>.
-  </p>
 {{ else }}
   {{ errorf "PDF not found for shortcode: %s. Ensure the file is in the same folder as your index.md/Rmd." (.Get "file") }}
 {{ end }}

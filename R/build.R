@@ -10,3 +10,4 @@ copy_rmds <- function(from_dir, to_dir) {
 
 copy_rmds(here("content", "exams"), here("static", "exams"))
 copy_rmds(here("content", "problemsets"), here("static", "problemsets"))
+copy_rmds(here("content", "tutorials"), here("static", "tutorials"))

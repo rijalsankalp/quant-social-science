@@ -23,7 +23,7 @@ remotes::install_github("mattblackwell/qsslearnr")
 
 After the package has been installed, you should be able to find all of the tutorials for the course in the "Tutorials" tab in the top-right pane of RStudio. Scroll down to find a QSS tutorial and click "Start Tutorial" to launch a tutorial:
 
-<center><img style="border:1px solid black;" src="../Lectures/figs/rstudio-tutorials.png" width = 70%></center>
+<center><img style="border:1px solid black;" src="../../lectures/figs/rstudio-tutorials.png" width = 70%></center>
 
 If you do not see any QSS tutorials after scrolling to the bottom, try to restart RStudio and check again. If you still don’t see any tutorials, confirm that you have installed the package by running `library(qsslearnr)`. If you get an error about the package not being installed, try the above installation procedure again and note any error messages you receive before reaching out to the teaching staff for assistance.
 
@@ -31,7 +31,7 @@ If you do not see any QSS tutorials after scrolling to the bottom, try to restar
 
 Once you have completed the tutorial you will see a screen that prompts you to enter your name and produce a submission report. Clicking "Download" should place a report into the folder of your choosing. Find that PDF and upload it to Blackboard (not Gradescope as the system suggests).
 
-<center><img style="border:1px solid black;" src="../Lectures/figs/tutorial-report.png" width = 70%></center>
+<center><img style="border:1px solid black;" src="../../lectures/figs/tutorial-report.png" width = 70%></center>
 
 Note that I do not grade these reports on correctness, just that you attempted the entire tutorial. That said, going slowly and making sure that you understand each question and its answer is a good practice to ensure you are mastering the course material.
 

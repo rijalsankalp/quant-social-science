@@ -23,4 +23,4 @@ cta_note:
   label: Fall 2025 <br> Department of Political Science <br> Villanova University
 ---
 
-**PSC 4175**
+**PSC 4375**

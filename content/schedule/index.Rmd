@@ -6,3 +6,16 @@ summary: "Schedule of the PSC 4175 semester with readings, due dates, and links 
 
 You can find the schedule for the semester here. Below is the complete list of titles, assignemts & due dates, homeworks and links to the "Materials" for each week - the videos and slides of the lectures included.
 `r blogdown::shortcode("schedule")`
+
+## Final Project
+
+The final project for the course will be a data analysis project where students will find a dataset of interest, state an interesting research question about that data, and answer this question using that data. Students may work individually, or can work in groups of up to 3 students.
+
+| Milestone | Due Date | 
+|:-----|:-----|
+| Proposal | Wed (03/12) by 11:59PM ET |
+| Draft Analyses | Mon (04/28) by 11:59AM ET |
+| In-class Presentations | 04/28, 04/30 |
+| Final Report | Fri (05/09) by 11:59PM ET | 
+
+**Late submissions**: For each day your submission is late, your score will drop by one entire letter grade. After three days you will receive a zero. There will be no exceptions.

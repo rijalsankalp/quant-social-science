@@ -268,30 +268,6 @@ Villanova University makes every reasonable effort to allow members of the commu
   * Wednesdays 2-4pm in SAC 257
   * You must make an appointment for Wednesday office hours here: https://calendly.com/weldzius/officehours
 
-[Back to ToC](#table-of-contents)
-
-## Schedule
-
-| Week | Date | Topic | Assignment Due |
-|:----|:-----|:------|:------|
-| [0](#week-0) | 01/13 | Introduction to QSS | F: [PSet 0](https://github.com/rweldzius/PSC4375_S2025/blob/main/psets/psc4375_s25_pset0.Rmd) |
-| [1](#week-1) | 01/20 | Causality: Randomized Experiments | T: QSS Tutorial 1 |
-| [2](#week-2) | 01/27 | Causality:  Observational Studies | T: QSS Tutorial 2 <br /> F: [PSet 1](https://github.com/rweldzius/PSC4375_S2025/blob/main/psets/psc4375_s25_pset1.Rmd)  |
-| [3](#week-3) | 02/03 | Measurement: Descriptive Statistics  | T: QSS Tutorial 3  |
-| [4](#week-4) | 02/10 | Measurement: Sampling & Bivariate Statistics | T: QSS Tutorial 4 <br /> F: [PSet 2](https://github.com/rweldzius/PSC4375_S2025/blob/main/psets/psc4375_s25_pset2.Rmd) |
-| [5](#week-5) | 02/17 | Prediction: Elections & Regression  | T: QSS Tutorial 5  |
-| [6](#week-6) | 02/24 | Prediction: More Regression |  F: [Exam 1](https://github.com/rweldzius/PSC4375_S2025/blob/main/exams/psc4375_s25_exam.Rmd) |
-| [7](#week-7) | 03/03 | Spring Break |  |
-| [8](#week-8) | 03/10 | Prediction: Interactions & Nonlinearities  | T: QSS Tutorial 6   <br /> W: Final project proposal|
-| [9](#week-9) | 03/17 | Probability: Basics | T: QSS Tutorial 7 |
-| [10](#week-10) | 03/24 | Probability: Random Variables & Large Samples | T: QSS Tutorial 8 <br /> F: [PSet 3](https://github.com/rweldzius/PSC4375_S2025/blob/main/psets/psc4375_s25_pset3.Rmd)   |
-| [11](#week-11) | 03/31 | Inference: Estimation | T: QSS Tutorial 9   |
-| [12](#week-12) | 04/07 | Inference: Hypothesis Testing  |  T: QSS Tutorial 10  |
-| [13](#week-13) | 04/14 | Inference: Uncertainty in Regression | W: [PSet 4](https://github.com/rweldzius/PSC4375_S2025/blob/main/psets/psc4375_s25_pset4.Rmd)  |
-| [14](#week-14) | 04/21 | Class Presentations  |    |
-| [15](#week-15) | 04/28 | Class Presentations  | M: Final project draft  |
-| [16](#week-16) | 05/05 | Final project/Exam 2 due Friday (05/09) by 11:59PM ET | F: [Exam 2](https://github.com/rweldzius/PSC4375_S2025/blob/main/exams/psc4375_s25_exam2.Rmd) <br /> F: Final project  |
-
 
 ## Helpful Resources
 

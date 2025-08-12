@@ -1,0 +1,16 @@
+Package: quant-social-science
+Version: 1.0
+Imports:
+  blogdown, 
+  broom, 
+  devtools, 
+  fs, 
+  gridExtra, 
+  here, 
+  knitr, 
+  modelr, 
+  patchwork, 
+  qss, 
+  rmarkdown, 
+  tidyverse, 
+  tinytex 

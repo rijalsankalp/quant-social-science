@@ -9,11 +9,18 @@ main:
     url: /weeks/
     weight: 3
   - name: Resources
-    url: /resources/ 
+    identifier: resources
     weight: 4
+    
   - name: Downloads
+    parent: resources
     url: /downloads/
-    weight: 5
+    weight: 1
+  - name: Tutorials
+    parent: resources
+    url: /tutorials/
+    weight: 2
+    
   - name: CampusWire
     url: https://campuswire.com/p/GD7AC473D
     weight: 6

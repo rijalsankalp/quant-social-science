@@ -9,3 +9,5 @@ menu:
     weight: 8
 type: weeks
 ---
+
+<img src= "../../lectures/figs/springbreak.gif"></img>

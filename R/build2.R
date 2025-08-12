@@ -36,3 +36,4 @@ delete_copied_rmds <- function(target_dir) {
 # --- Run the function on the target directories ---
 delete_copied_rmds(here("static", "exams"))
 delete_copied_rmds(here("static", "problemsets"))
+delete_copied_rmds(here("static", "tutorials"))
