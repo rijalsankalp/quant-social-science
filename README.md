@@ -1,8 +1,8 @@
-# PSC 4375: Quantative Social Science
+# PSC 4375: Quantitative Social Science
 
 ## Prof. Ryan Weldzius
 
-The repository for the Hugo/Blogdown site for the course PSC 4375: Quantative Social Science. Prof. Weldzius is teaching this course at Villanova University in Fal 2025.
+The repository for the Hugo/Blogdown site for the course PSC 4375: Quantitative Social Science. Prof. Weldzius is teaching this course at Villanova University in Fal 2025.
 
 The architecture, and framework of this site were borrowed and appropriated from [Matthew Blackwell](https://mattblackwell.org/). His course on Data Analysis and Politics
 can be found here: [https://gov51.mattblackwell.org/]().
